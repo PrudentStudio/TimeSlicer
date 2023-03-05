@@ -23,9 +23,9 @@ extension Date {
 }
 
 
-func numBoxes(from_start: Date, to_end: Date) -> Int {
+func numBoxes(from_start: Date, to_end: Date, time_interval: Int = 10) -> Int {
     let minutes = Int(to_end.timeIntervalSince(from_start)/60)
-    return minutes / 10
+    return minutes / time_interval
 }
 
 func getEvents(from_start: Date, to_end: Date) -> [EKEvent] {
@@ -47,7 +47,7 @@ struct Timebox {
 }
 
 
-func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
+func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) -> [Timebox] {
     var timeboxes = [Timebox]()
     let events = getEvents(from_start: startDate, to_end: endDate)
     
@@ -66,7 +66,7 @@ func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
         return start >= workingHoursStart && end <= workingHoursEnd
     }
     
-    let interval = 600.0 // 10 minutes
+    let interval = Double(time_interval)*60.0  // 10 minutes
     var currentStart = startDate
     var currentEnd = currentStart.addingTimeInterval(interval)
     
@@ -97,7 +97,7 @@ func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
     return timeboxes
 }
 
-func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
+func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10) -> [Timebox] {
 //    var sortedTasks = tasks.sorted {
 //        $0.priority > $1.priority
 //    }
@@ -116,7 +116,10 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
             if taskComplete {
                 continue
             }
-            var num_boxes_needed = myTask.duration / 10
+            var num_boxes_needed = Int(myTask.duration) / time_interval
+            if !((Int(myTask.duration) % time_interval) == 0) {
+                num_boxes_needed += 1
+            }
             
             for i in 0..<scheduledTimeboxes.count {
                 var timebox = scheduledTimeboxes[i]

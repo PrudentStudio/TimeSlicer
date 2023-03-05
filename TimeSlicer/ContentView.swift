@@ -88,6 +88,13 @@ struct ContentView: View {
                             print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
                             print(Date().endOfWeek)
                             
+                            var aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+                            
+                            var timeInterval = 60
+                            if aggressive {
+                                timeInterval = 10
+                            }
+                            
                             let calendar = Calendar.current
                             let components = calendar.dateComponents([.year, .month, .day], from: Date())
                             
@@ -108,7 +115,7 @@ struct ContentView: View {
                             var end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
                             
                             print(start_date, end_date)
-                            var myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date)
+                            var myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
                             var cnt = 0
                             var avail = 0
                             for box in myTimeboxes {
@@ -119,7 +126,7 @@ struct ContentView: View {
                             }
                             print(cnt)
                             print(avail)
-                            let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes)
+                            let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
                             print(avail)
                         }) {
                             Image(systemName: "clock.arrow.2.circlepath")
