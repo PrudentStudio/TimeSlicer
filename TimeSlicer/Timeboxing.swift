@@ -98,26 +98,20 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
 }
 
 func cleanCalendar(){
-    print("Cleaning")
-    eventStore.requestAccess(to: EKEntityType.event) { (accessGranted, error) in
-            
-        print("Access Granted")
-            
-        }
-    let eventStore = EKEventStore()
     let calendars = eventStore.calendars(for: .event)
-    let matchingCalendars = calendars.filter { $0.title == "RyanMcTime" }
-    let predicate = eventStore.predicateForEvents(withStart: Date.distantPast, end: Date.distantFuture, calendars: matchingCalendars)
-    let events = eventStore.events(matching: predicate)
-    print(events)
-    for event in events {
+    let calendarToDelete = calendars.first(where: { $0.title == "RyanMcTime" })
+
+    if let calendar = calendarToDelete {
         do {
-            try eventStore.remove(event, span: .thisEvent)
-            print("Deleted event: \(String(describing: event.title))")
+            try eventStore.removeCalendar(calendar, commit: true)
+            print("Calendar deleted successfully")
         } catch {
-            print("Error deleting event: \(error.localizedDescription)")
+            print("Error deleting calendar: \(error.localizedDescription)")
         }
+    } else {
+        print("Calendar not found")
     }
+
 }
 
 

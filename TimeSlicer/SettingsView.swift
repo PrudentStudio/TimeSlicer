@@ -53,6 +53,9 @@ struct SettingsView: View {
                 }
                 Section(header: Text("Scheduling Style")){
                     Toggle("Aggressive", isOn: $aggressive)
+                    Button("Force Delete App Calendar", role: .destructive) {
+                        cleanCalendar()
+                    }
                 }
                 
 #endif
