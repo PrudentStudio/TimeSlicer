@@ -60,6 +60,7 @@ struct ContentView: View {
                     }
                 }
             }
+            .navigationBarTitle("TimeSlicer", displayMode: .large)
             Text("Select an item")
                 
         }.sheet(isPresented: $isPresentingSheet) {

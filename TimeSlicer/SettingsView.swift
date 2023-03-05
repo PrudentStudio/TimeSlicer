@@ -33,7 +33,9 @@ struct SettingsView: View {
                     Button("Choose Calendars") {
                         isPresentingCalendarChooser = true
                     }
-                    .sheet(isPresented: $isPresentingCalendarChooser) {
+                    .sheet(isPresented: $isPresentingCalendarChooser, onDismiss: {
+                        selectedCals = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
+                    }) {
                         CalendarChooserView(selectedCalendars: $selectedCals)
                     }
                     Button("Clear selected calendars", role: .destructive){
@@ -61,14 +63,17 @@ struct SettingsView: View {
         }
         .onDisappear(){
             print("Closing and saving")
+            UserDefaults.standard.set(selectedCals, forKey: "selectedCals")
             UserDefaults.standard.set(aggressive, forKey: "Aggressive")
             UserDefaults.standard.set(dayStart, forKey: "DayStart")
             UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
         }
         .onAppear(){
+            print("wee")
             aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
             dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
             dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
+            selectedCals = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
         }
     }
 
@@ -88,59 +93,54 @@ struct CalendarChooserView: UIViewControllerRepresentable {
     @Binding var selectedCalendars: [String]
     
     func makeUIViewController(context: Context) -> EKCalendarChooser {
-        let calendarChooser = EKCalendarChooser(selectionStyle: .multiple, displayStyle: .allCalendars, entityType: .event, eventStore: EKEventStore())
-        calendarChooser.selectedCalendars = getCalendarsByIdentifiers(selectedCalendars) ?? []
-        calendarChooser.showsDoneButton = true
-        calendarChooser.showsCancelButton = true
-        calendarChooser.delegate = context.coordinator
-        return calendarChooser
+        let chooser = EKCalendarChooser(selectionStyle: .multiple, displayStyle: .allCalendars, entityType: .event, eventStore: EKEventStore())
+        
+        chooser.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])!
+        chooser.delegate = context.coordinator
+        return chooser
     }
     
     func updateUIViewController(_ uiViewController: EKCalendarChooser, context: Context) {
-        uiViewController.selectedCalendars = getCalendarsByIdentifiers(selectedCalendars) ?? []
-        print(selectedCalendars)
+        uiViewController.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])!
     }
     
     func makeCoordinator() -> Coordinator {
-        let calendars = getCalendarsByIdentifiers(selectedCalendars) ?? []
-        return Coordinator(selectedCalendars: Binding<Set<EKCalendar>>(
-            get: { Set(calendars) },
-            set: { newValue in
-                let identifiers = newValue.map { $0.calendarIdentifier }
-                selectedCalendars = identifiers
-                UserDefaults.standard.set(identifiers, forKey: "selectedCals")
-            }
-        ))
+        return Coordinator(selectedCalendars: $selectedCalendars)
+        
     }
     
     class Coordinator: NSObject, EKCalendarChooserDelegate {
         
-        @Binding var selectedCalendars: Set<EKCalendar>
-        
-        init(selectedCalendars: Binding<Set<EKCalendar>>) {
-            _selectedCalendars = selectedCalendars
-        }
+        let eventStore = EKEventStore()
+            let calendarChooser: EKCalendarChooser
+            
+            init(selectedCalendars: Binding<[String]>) {
+                
+                self.calendarChooser = EKCalendarChooser(
+                    selectionStyle: .multiple,
+                    displayStyle: .allCalendars,
+                    entityType: .event,
+                    eventStore: eventStore
+                )
+                self.calendarChooser.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])!
+                self.calendarChooser.showsDoneButton = true
+                self.calendarChooser.showsCancelButton = true
+                super.init()
+                self.calendarChooser.delegate = self
+            }
         
         func calendarChooserSelectionDidChange(_ calendarChooser: EKCalendarChooser) {
-            selectedCalendars = calendarChooser.selectedCalendars
-            print(selectedCalendars)
-            var selectedCals: [String] = []
-            for cal in selectedCalendars {
-                selectedCals.append(cal.calendarIdentifier)
+            print(calendarChooser.selectedCalendars)
+            var myCalendarStrings: [String] = []
+            // Can be reduced to a map but im exhausted
+            for cal in calendarChooser.selectedCalendars {
+                myCalendarStrings.append(cal.calendarIdentifier)
             }
-            UserDefaults.standard.set(selectedCals, forKey: "selectedCals")
-        }
-        
-        func calendarChooserDidFinish(_ calendarChooser: EKCalendarChooser) {
-            selectedCalendars = calendarChooser.selectedCalendars
-            calendarChooser.dismiss(animated: true, completion: nil)
-        }
-        
-        func calendarChooserDidCancel(_ calendarChooser: EKCalendarChooser) {
-            calendarChooser.dismiss(animated: true, completion: nil)
+            UserDefaults.standard.set(myCalendarStrings, forKey: "selectedCals")
         }
     }
 }
+
     
 func getCalendarsByIdentifiers(_ identifiers: [String]) -> Set<EKCalendar>? {
     let eventStore = EKEventStore()
