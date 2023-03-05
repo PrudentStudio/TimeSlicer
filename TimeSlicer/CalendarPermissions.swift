@@ -12,37 +12,57 @@ let eventStore = EKEventStore()
 
 struct CalendarPermissions: View {
     @State private var isCalendarPermissionGranted = false
-    @State private var selectedCalendar: EKCalendar?
-    @State private var calendars: [EKCalendar] = []
+    @State public var selectedSource: EKSource?
+    @State private var allSources: [EKSource] = []
+    
+    @Binding var isPresentingSheet: Bool
     
     var body: some View {
-        VStack {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-            Button(action: {requestCalendarPermission()}) {
-                Text("Grant Calendar Permission")
-            }
-            Picker("Select a calendar", selection: $selectedCalendar) {
-                            ForEach(calendars, id: \.calendarIdentifier) { calendar in
-                                Text(calendar.title)
-                            }
+        NavigationView {
+            Form {
+                Section(header: Text("Step 0 - Permissions")) {
+                    if (checkCalendarAuthorizationStatus()) {
+                        Text("You have already granted these permissions")
+                    } else {
+                        Button(action: {
+                            requestCalendarPermission()
+                        }) {
+                            Text("Grrant Calendar Permission")
                         }
-                        .disabled(calendars.isEmpty)
-        }.onAppear(perform: fetchCalendars)
+                    }
+                }
+                Section(header: Text("Step 1 - Primary Calendar Source")) {
+                    Text("Which Calendar source do you want us to write the tasks to?")
+                    Picker("Primary Calendar", selection: $selectedSource) {
+                        ForEach(allSources, id: \.sourceIdentifier) { source in
+                            Text(source.title)
+                        }
+                        
+                    }
+                }
+                Section(header: Text("Step 2 - Configure ze App")) {
+                    Text("Don't forget to go to the settings section and fine-tune the app")
+                }
+        }
+            .navigationTitle("Onboarding")
+        }.onAppear(perform: {
+            fetchSources()
+            print(selectedSource)
+            if isCalendarPermissionGranted {
+                isPresentingSheet = false
+                
+            }
+        })
     }
     
-    func fetchCalendars() {
-            let eventStore = EKEventStore()
-            let calendars = eventStore.calendars(for: .event)
-
-            // Filter the calendars to include only those that are visible and writable
-            let visibleCalendars = calendars.filter { calendar in
-                calendar.allowsContentModifications && calendar.allowedEntityTypes.contains(.event)
-            }
-
-            DispatchQueue.main.async {
-                self.calendars = visibleCalendars
-                self.selectedCalendar = visibleCalendars.first
-            }
+    func fetchSources(){
+        let eventStore = EKEventStore()
+        let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
+        
+        DispatchQueue.main.async {
+            self.allSources = sources
+            self.selectedSource = sources.first
+        }
     }
     
     func requestCalendarPermission() {
@@ -66,10 +86,23 @@ struct CalendarPermissions: View {
             isCalendarPermissionGranted = false
         }
     }
-}
-
-struct CalendarPermissions_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarPermissions()
+    
+    func checkCalendarAuthorizationStatus() -> Bool {
+        let status = EKEventStore.authorizationStatus(for: .event)
+        switch status {
+        case .authorized:
+            // The app has permission to access the user's calendar
+            return true
+        case .denied, .restricted:
+            // The app does not have permission to access the user's calendar
+            return false
+        case .notDetermined:
+            // The user has not yet been asked to grant permission to the app
+            return false
+        @unknown default:
+            return false
+        }
     }
+    
+    
 }

@@ -11,7 +11,7 @@ import CoreData
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    @State private var isPresentingSheet = false //UserDefaults.standard.bool(forKey: "permission");
+    @State private var isPresentingSheet = true // Hardcoding for demo, otherwise !(checkCalendarAuthorizationStatus)
     @State private var isPresentingAddTask = false
     
     @State private var searchText = ""
@@ -64,7 +64,7 @@ struct ContentView: View {
             Text("Select an item")
                 
         }.sheet(isPresented: $isPresentingSheet) {
-            CalendarPermissions()
+            CalendarPermissions(isPresentingSheet: $isPresentingSheet)
         }.sheet(isPresented: $isPresentingAddTask) {
             TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
                 .environment(\.managedObjectContext, viewContext)
