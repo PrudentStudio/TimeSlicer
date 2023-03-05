@@ -12,37 +12,61 @@ import EventKitUI
 #endif
 
 struct SettingsView: View {
+    @State public var dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
+    @State public var dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
+    @State public var aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
     let eventStore = EKEventStore()
     @State var selectedCals: [String] = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
     @State private var isPresentingCalendarChooser = false
     
     var body: some View {
         NavigationView {
-            List {
+            Form {
                 Section(header: Text("About")) {
                     Link(destination: URL(string: "https://www.example.com")!) {
-                                            Label("Visit our website", systemImage: "globe")
-                                        }
+                        Label("Visit our website", systemImage: "globe")
+                    }
                 }
 #if os(iOS)
                 Section(header: Text("Calendars")) {
                     Text("Selected calendars: \(selectedCals.count)")
                     Button("Choose Calendars") {
-                                    isPresentingCalendarChooser = true
-                                }
-                                .sheet(isPresented: $isPresentingCalendarChooser) {
-                                    CalendarChooserView(selectedCalendars: $selectedCals)
-                                }
+                        isPresentingCalendarChooser = true
+                    }
+                    .sheet(isPresented: $isPresentingCalendarChooser) {
+                        CalendarChooserView(selectedCalendars: $selectedCals)
+                    }
                 }
+                Section(header: Text("Blackout Dates")){
+                    Text("Select your working hours:")
+                    DatePicker("Start Time", selection: $dayStart , displayedComponents: [.hourAndMinute])
+                    DatePicker("End Time", selection: $dayEnd, displayedComponents: [.hourAndMinute])
+                }
+                Section(header: Text("Scheduling Style")){
+                    Toggle("Aggressive", isOn: $aggressive)
+                }
+                
 #endif
             }
 #if os(iOS)
             .listStyle(GroupedListStyle())
 #endif
-                .navigationTitle("Settings")
+            .navigationTitle("Settings")
+        }
+        .onDisappear(){
+            print("Closing and saving")
+            UserDefaults.standard.set(aggressive, forKey: "Aggressive")
+            UserDefaults.standard.set(dayStart, forKey: "DayStart")
+            UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
+        }
+        .onAppear(){
+            aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
+            dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
+            dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
         }
     }
 
+    
 }
 
 struct SettingsView_Previews: PreviewProvider {
