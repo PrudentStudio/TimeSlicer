@@ -97,10 +97,35 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
     return timeboxes
 }
 
+func cleanCalendar(){
+    print("Cleaning")
+    eventStore.requestAccess(to: EKEntityType.event) { (accessGranted, error) in
+            
+        print("Access Granted")
+            
+        }
+    let eventStore = EKEventStore()
+    let calendars = eventStore.calendars(for: .event)
+    let matchingCalendars = calendars.filter { $0.title == "RyanMcTime" }
+    let predicate = eventStore.predicateForEvents(withStart: Date.distantPast, end: Date.distantFuture, calendars: matchingCalendars)
+    let events = eventStore.events(matching: predicate)
+    print(events)
+    for event in events {
+        do {
+            try eventStore.remove(event, span: .thisEvent)
+            print("Deleted event: \(String(describing: event.title))")
+        } catch {
+            print("Error deleting event: \(error.localizedDescription)")
+        }
+    }
+}
+
+
 func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10) -> [Timebox] {
 //    var sortedTasks = tasks.sorted {
 //        $0.priority > $1.priority
 //    }
+    cleanCalendar()
     let priority1 = tasks.filter {$0.priority == 1}.sorted {$0.priority > $1.priority}
     let priority2 = tasks.filter {$0.priority == 2}.sorted {$0.priority > $1.priority}
     let priority3 = tasks.filter {$0.priority == 3}.sorted {$0.priority > $1.priority}
