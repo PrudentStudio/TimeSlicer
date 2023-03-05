@@ -26,8 +26,9 @@ struct CalendarPermissions: View {
                     } else {
                         Button(action: {
                             requestCalendarPermission()
+                            fetchSources()
                         }) {
-                            Text("Grrant Calendar Permission")
+                            Text("Grant Calendar Permission")
                         }
                     }
                 }
@@ -47,11 +48,6 @@ struct CalendarPermissions: View {
             .navigationTitle("Onboarding")
         }.onAppear(perform: {
             fetchSources()
-            print(selectedSource)
-            if isCalendarPermissionGranted {
-                isPresentingSheet = false
-                
-            }
         })
     }
     
