@@ -36,6 +36,12 @@ struct SettingsView: View {
                     .sheet(isPresented: $isPresentingCalendarChooser) {
                         CalendarChooserView(selectedCalendars: $selectedCals)
                     }
+                    Button("Clear selected calendars", role: .destructive){
+                        UserDefaults.standard.set([], forKey: "selectedCals")
+                        selectedCals = []
+                    }
+
+                   
                 }
                 Section(header: Text("Blackout Dates")){
                     Text("Select your working hours:")
