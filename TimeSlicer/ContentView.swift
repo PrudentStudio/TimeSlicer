@@ -101,8 +101,10 @@ struct ContentView: View {
                             }
                             print(cnt)
                             print(avail)
+                            let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes)
+                            print(avail)
                         }) {
-                            Image(systemName: "calendar.badge.plus")
+                            Image(systemName: "clock.arrow.2.circlepath")
                                 .resizable()
                                 .frame(width: 32, height: 32)
                                 .padding()

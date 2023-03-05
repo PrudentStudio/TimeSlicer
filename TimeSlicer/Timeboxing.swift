@@ -96,6 +96,61 @@ func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
     
     return timeboxes
 }
+
+func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
+    var sortedTasks = tasks.sorted {
+        $0.priority > $1.priority
+    }
+    
+    var scheduledTimeboxes = timeboxes
+    
+    for myTask in sortedTasks {
+        var num_boxes_needed = myTask.duration / 10
+        
+        for i in 0..<scheduledTimeboxes.count {
+            var timebox = scheduledTimeboxes[i]
+            
+            if timebox.isAvailable {
+                var eventStart = timebox.start
+                var eventEnd = eventStart.addingTimeInterval(TimeInterval(myTask.duration * 60))
+                
+                var event = EKEvent(eventStore: eventStore)
+                event.title = myTask.title
+                event.startDate = eventStart
+                event.endDate = eventEnd
+                event.calendar = eventStore.calendars(for: .event).first(where: { $0.title == "RyanMcTime" }) ?? {
+                    let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
+                    newCalendar.title = "RyanMcTime"
+                    newCalendar.source = EKEventStore().sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
+                    try? eventStore.saveCalendar(newCalendar, commit: true)
+                    return newCalendar
+                }()
+                
+                do {
+                    try eventStore.save(event, span: .thisEvent)
+                    timebox.events.append(event)
+                    scheduledTimeboxes[i] = timebox
+                    num_boxes_needed -= 1
+                    
+                    if num_boxes_needed == 0 {
+                        break
+                    }
+                    
+                } catch let error {
+                    print("Error saving event: \(error.localizedDescription)")
+                }
+            }
+            
+            if num_boxes_needed == 0 {
+                break
+            }
+        }
+    }
+        
+    return scheduledTimeboxes
+}
+
+
 /*
 func getWritableCalendar() -> EKCalendar {
     let myCalendarIdentifiers = UserDefaults.standard.stringArray(forKey: "selectedCals")
