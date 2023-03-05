@@ -90,7 +90,7 @@ struct ContentView: View {
                             let start_date = calendar.date(from: components)
                             components.day = 10
                             let end_date = calendar.date(from: components)
-                            var myTimeboxes = createTimeboxes(from: start_date!, to: end_date!)
+                            var myTimeboxes = createTimeboxes(startDate: start_date!, endDate: end_date!)
                             var cnt = 0
                             var avail = 0
                             for box in myTimeboxes {

@@ -47,14 +47,20 @@ struct Timebox {
 }
 
 
-func createTimeboxes(from startDate: Date, to endDate: Date) -> [Timebox] {
+func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
     var timeboxes = [Timebox]()
+    let events = getEvents(from_start: startDate, to_end: endDate)
     
     // Helper function to check if a timebox is within working hours
     func isWithinWorkingHours(start: Date, end: Date) -> Bool {
         let calendar = Calendar.current
-        let workingHoursStart = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: start)!
-        let workingHoursEnd = calendar.date(bySettingHour: 20, minute: 0, second: 0, of: start)!
+        let userDefinedStartComponents = calendar.dateComponents([.hour, .minute], from: UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!)
+        let userDefinedEndComponents = calendar.dateComponents([.hour, .minute], from: UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!)
+        let workingHoursStart = calendar.date(
+            bySettingHour: userDefinedStartComponents.hour!,
+            minute: userDefinedStartComponents.minute!,
+            second: 0, of: start)!
+        let workingHoursEnd = calendar.date(bySettingHour: userDefinedEndComponents.hour!, minute: userDefinedEndComponents.minute!, second: 0, of: start)!
         let startComponents = calendar.dateComponents([.hour, .minute], from: start)
         let endComponents = calendar.dateComponents([.hour, .minute], from: end)
         return start >= workingHoursStart && end <= workingHoursEnd && startComponents.hour! >= 8 && endComponents.hour! <= 20
@@ -66,10 +72,23 @@ func createTimeboxes(from startDate: Date, to endDate: Date) -> [Timebox] {
     
     while currentEnd <= endDate {
         var timebox = Timebox(start: currentStart, end: currentEnd, events: [], isWorkingHours: false, isAvailable: false)
+        timebox.isWorkingHours = false
+        timebox.isAvailable = false
         if isWithinWorkingHours(start: currentStart, end: currentEnd) {
             timebox.isWorkingHours = true
             timebox.isAvailable = true
         }
+        
+        for myEvent in events {
+            if (myEvent.isAllDay) {
+                continue
+            }
+            if (myEvent.startDate < timebox.end && myEvent.endDate > timebox.start) {
+                timebox.isAvailable = false
+            }
+            
+        }
+        
         timeboxes.append(timebox)
         currentStart = currentEnd
         currentEnd = currentStart.addingTimeInterval(interval)
@@ -77,3 +96,16 @@ func createTimeboxes(from startDate: Date, to endDate: Date) -> [Timebox] {
     
     return timeboxes
 }
+/*
+func getWritableCalendar() -> EKCalendar {
+    let myCalendarIdentifiers = UserDefaults.standard.stringArray(forKey: "selectedCals")
+    let myCalendars = getCalendarsByIdentifiers(myCalendarIdentifiers ?? [])!
+    for cal in myCalendars {
+        if cal.isImmutable {
+            continue
+        } else {
+            
+        }
+    }
+}
+*/
