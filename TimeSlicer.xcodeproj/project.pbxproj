@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA081AC29B455F600D8C372 /* Timeboxing.swift */; };
+		3EA081B029B50D5C00D8C372 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 3EA081AF29B50D5C00D8C372 /* AlertToast */; };
 		3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */; };
 		3EBCC7E629B3D85800AEA9F3 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */; };
 		3EBCC7E929B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E729B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld */; };
@@ -39,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3EA081B029B50D5C00D8C372 /* AlertToast in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +106,7 @@
 			);
 			name = TimeSlicer;
 			packageProductDependencies = (
+				3EA081AF29B50D5C00D8C372 /* AlertToast */,
 			);
 			productName = TimeSlicer;
 			productReference = 3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */;
@@ -134,6 +137,7 @@
 			);
 			mainGroup = 3EBCC7D729B3D85800AEA9F3;
 			packageReferences = (
+				3EA081AE29B50D5C00D8C372 /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			productRefGroup = 3EBCC7E129B3D85800AEA9F3 /* Products */;
 			projectDirPath = "";
@@ -386,6 +390,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3EA081AE29B50D5C00D8C372 /* XCRemoteSwiftPackageReference "AlertToast" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		3EA081AF29B50D5C00D8C372 /* AlertToast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3EA081AE29B50D5C00D8C372 /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		3EBCC7E729B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld */ = {

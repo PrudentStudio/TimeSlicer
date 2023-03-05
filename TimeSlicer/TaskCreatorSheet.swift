@@ -68,7 +68,6 @@ struct TaskCreatorSheet: View {
                                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                                 }
                             }
-                            print("hiller was wrong")
                             isPresentingAddTask = false
                         }) {
                             Text("Save")

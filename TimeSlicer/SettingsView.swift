@@ -73,7 +73,6 @@ struct SettingsView: View {
             UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
         }
         .onAppear(){
-            print("wee")
             aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
             dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
             dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!

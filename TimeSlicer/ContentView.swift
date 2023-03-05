@@ -8,6 +8,8 @@
 import SwiftUI
 import CoreData
 
+import AlertToast
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
@@ -16,6 +18,8 @@ struct ContentView: View {
     
     @State private var searchText = ""
     @State private var showCancelButton = false
+    
+    @State private var showToast = false
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
@@ -76,6 +80,10 @@ struct ContentView: View {
         }.sheet(isPresented: $isPresentingAddTask) {
             TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
                 .environment(\.managedObjectContext, viewContext)
+        }.toast(isPresenting: $showToast){
+            
+            // `.alert` is the default displayMode
+            AlertToast(type: .complete(.teal), title: "Calendar Organized!")
         }
         .overlay(
                     GeometryReader { geometry in
@@ -84,10 +92,6 @@ struct ContentView: View {
                             HStack {
                                 Spacer()
                                 Button(action: {
-                                    print("Hellllo")
-                                    print(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])
-                                    print(Date().endOfWeek!)
-                                    
                                     let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
                                     
                                     var timeInterval = 60
@@ -114,7 +118,6 @@ struct ContentView: View {
                                     let start_date = calendar.date(from: components)!
                                     let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
                                     
-                                    print(start_date, end_date)
                                     let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
                                     var cnt = 0
                                     var avail = 0
@@ -124,10 +127,8 @@ struct ContentView: View {
                                         }
                                         cnt += 1
                                     }
-                                    print(cnt)
-                                    print(avail)
                                     let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
-                                    print(avail)
+                                    showToast = true
                                 }) {
                                     Image(systemName: "clock.arrow.2.circlepath")
                                         .resizable()
