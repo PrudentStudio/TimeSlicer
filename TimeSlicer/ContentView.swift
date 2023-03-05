@@ -14,24 +14,35 @@ struct ContentView: View {
     @State private var isPresentingSheet = false //UserDefaults.standard.bool(forKey: "permission");
     @State private var isPresentingAddTask = false
     
+    @State private var searchText = ""
+    @State private var showCancelButton = false
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Tasks>
+    
+    var searchResults: [Tasks] {
+        if searchText.isEmpty {
+            return Array(items);
+        } else {
+            return items.filter { $0.title?.lowercased().contains(searchText.lowercased()) == true || $0.description.lowercased().contains(searchText.lowercased()) == true }
+        }
+    }
 
     var body: some View {
         NavigationView {
             List {
-                ForEach(items) { item in
+                ForEach(searchResults, id: \.self) { item in
                     NavigationLink {
-                        Text("Item at \(item.timestamp!, formatter: itemFormatter)")
+                        ItemDetail(item: item)
                     } label: {
-                        Text(item.timestamp!, formatter: itemFormatter)
+                        Text(item.title!)
+                            .padding()
                     }
                 }
                 .onDelete(perform: deleteItems)
-            }
+            }.searchable(text: $searchText)
             .toolbar {
                 ToolbarItem {
                     NavigationLink(destination: SettingsView()) {
@@ -65,7 +76,7 @@ struct ContentView: View {
                         Spacer()
                         Button(action: {
                            print("Hellllo")
-                            isPresentingAddTask = true
+                            print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
                         }) {
                             Image(systemName: "calendar.badge.plus")
                                 .resizable()
@@ -125,5 +136,16 @@ private let itemFormatter: DateFormatter = {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+
+struct ItemDetail : View {
+    let item: Tasks
+
+    var body: some View {
+        VStack {
+            Text(item.desc!)
+        }
+        .navigationTitle(item.title!)
     }
 }
