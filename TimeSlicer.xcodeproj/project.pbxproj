@@ -13,6 +13,9 @@
 		3EBCC7EB29B3D85800AEA9F3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7EA29B3D85800AEA9F3 /* ContentView.swift */; };
 		3EBCC7ED29B3D85C00AEA9F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EBCC7EC29B3D85C00AEA9F3 /* Assets.xcassets */; };
 		3EBCC7F129B3D85C00AEA9F3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3EBCC7F029B3D85C00AEA9F3 /* Preview Assets.xcassets */; };
+		3EBCC7F829B3DA4E00AEA9F3 /* CalendarPermissions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7F729B3DA4E00AEA9F3 /* CalendarPermissions.swift */; };
+		3EBCC7FD29B3F13000AEA9F3 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7FC29B3F13000AEA9F3 /* SettingsView.swift */; };
+		3EBCC7FF29B4134D00AEA9F3 /* TaskCreatorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7FE29B4134D00AEA9F3 /* TaskCreatorSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		3EBCC7EC29B3D85C00AEA9F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3EBCC7EE29B3D85C00AEA9F3 /* TimeSlicer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TimeSlicer.entitlements; sourceTree = "<group>"; };
 		3EBCC7F029B3D85C00AEA9F3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		3EBCC7F729B3DA4E00AEA9F3 /* CalendarPermissions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarPermissions.swift; sourceTree = "<group>"; };
+		3EBCC7FC29B3F13000AEA9F3 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		3EBCC7FE29B4134D00AEA9F3 /* TaskCreatorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCreatorSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,13 +62,16 @@
 		3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */ = {
 			isa = PBXGroup;
 			children = (
+				3EBCC7FC29B3F13000AEA9F3 /* SettingsView.swift */,
 				3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */,
 				3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */,
 				3EBCC7EA29B3D85800AEA9F3 /* ContentView.swift */,
+				3EBCC7FE29B4134D00AEA9F3 /* TaskCreatorSheet.swift */,
 				3EBCC7EC29B3D85C00AEA9F3 /* Assets.xcassets */,
 				3EBCC7EE29B3D85C00AEA9F3 /* TimeSlicer.entitlements */,
 				3EBCC7E729B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld */,
 				3EBCC7EF29B3D85C00AEA9F3 /* Preview Content */,
+				3EBCC7F729B3DA4E00AEA9F3 /* CalendarPermissions.swift */,
 			);
 			path = TimeSlicer;
 			sourceTree = "<group>";
@@ -91,6 +100,8 @@
 			dependencies = (
 			);
 			name = TimeSlicer;
+			packageProductDependencies = (
+			);
 			productName = TimeSlicer;
 			productReference = 3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */;
 			productType = "com.apple.product-type.application";
@@ -119,6 +130,8 @@
 				Base,
 			);
 			mainGroup = 3EBCC7D729B3D85800AEA9F3;
+			packageReferences = (
+			);
 			productRefGroup = 3EBCC7E129B3D85800AEA9F3 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -148,7 +161,10 @@
 				3EBCC7E929B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld in Sources */,
 				3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */,
 				3EBCC7EB29B3D85800AEA9F3 /* ContentView.swift in Sources */,
+				3EBCC7FD29B3F13000AEA9F3 /* SettingsView.swift in Sources */,
+				3EBCC7F829B3DA4E00AEA9F3 /* CalendarPermissions.swift in Sources */,
 				3EBCC7E629B3D85800AEA9F3 /* Persistence.swift in Sources */,
+				3EBCC7FF29B4134D00AEA9F3 /* TaskCreatorSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,6 +221,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Access Schedule";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -257,6 +275,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Access Schedule";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;

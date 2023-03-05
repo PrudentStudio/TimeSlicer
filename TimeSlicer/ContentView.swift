@@ -10,11 +10,15 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
+    
+    @State private var isPresentingSheet = false //UserDefaults.standard.bool(forKey: "permission");
+    @State private var isPresentingAddTask = false
+    
+    
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
         animation: .default)
-    private var items: FetchedResults<Item>
+    private var items: FetchedResults<Tasks>
 
     var body: some View {
         NavigationView {
@@ -29,24 +33,59 @@ struct ContentView: View {
                 .onDelete(perform: deleteItems)
             }
             .toolbar {
+                ToolbarItem {
+                    NavigationLink(destination: SettingsView()) {
+                        Label("Settings", systemImage: "gear")
+                    }
+                }
 #if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
 #endif
                 ToolbarItem {
-                    Button(action: addItem) {
+                    Button(action: {isPresentingAddTask=true}){//addItem) {
                         Label("Add Item", systemImage: "plus")
                     }
                 }
             }
             Text("Select an item")
+                
+        }.sheet(isPresented: $isPresentingSheet) {
+            CalendarPermissions()
+        }.sheet(isPresented: $isPresentingAddTask) {
+            TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
+                .environment(\.managedObjectContext, viewContext)
         }
+        .overlay(
+            GeometryReader { geometry in
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                           print("Hellllo")
+                            isPresentingAddTask = true
+                        }) {
+                            Image(systemName: "calendar.badge.plus")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .clipShape(Circle())
+                        }
+                        .padding(.trailing, 16)
+                        .padding(.bottom, geometry.safeAreaInsets.bottom+16)
+                    }
+                }
+            }
+        )
     }
 
     private func addItem() {
         withAnimation {
-            let newItem = Item(context: viewContext)
+            let newItem = Tasks(context: viewContext)
             newItem.timestamp = Date()
 
             do {
