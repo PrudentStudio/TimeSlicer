@@ -78,70 +78,70 @@ struct ContentView: View {
                 .environment(\.managedObjectContext, viewContext)
         }
         .overlay(
-            GeometryReader { geometry in
-                VStack {
-                    Spacer()
-                    HStack {
-                        Spacer()
-                        Button(action: {
-                           print("Hellllo")
-                            print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
-                            print(Date().endOfWeek)
-                            
-                            var aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
-                            
-                            var timeInterval = 60
-                            if aggressive {
-                                timeInterval = 10
-                            }
-                            
-                            let calendar = Calendar.current
-                            let components = calendar.dateComponents([.year, .month, .day], from: Date())
-                            
-
-                            /*
-                             components.year = 2023
-                            components.month = 03
-                            components.day = 06
-                            components.hour = 01
-                            components.minute = 59
-                            components.second = 59
-                            let start_date = calendar.date(from: components)
-                            components.day = 10
-                            let end_date = calendar.date(from: components)
-                             */
-                            
-                            var start_date = calendar.date(from: components)!
-                            var end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
-                            
-                            print(start_date, end_date)
-                            var myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
-                            var cnt = 0
-                            var avail = 0
-                            for box in myTimeboxes {
-                                if box.isAvailable {
-                                    avail += 1
+                    GeometryReader { geometry in
+                        VStack {
+                            Spacer()
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    print("Hellllo")
+                                    print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
+                                    print(Date().endOfWeek)
+                                    
+                                    var aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+                                    
+                                    var timeInterval = 60
+                                    if aggressive {
+                                        timeInterval = 10
+                                    }
+                                    
+                                    let calendar = Calendar.current
+                                    let components = calendar.dateComponents([.year, .month, .day], from: Date())
+                                    
+                                    
+                                    /*
+                                     components.year = 2023
+                                     components.month = 03
+                                     components.day = 06
+                                     components.hour = 01
+                                     components.minute = 59
+                                     components.second = 59
+                                     let start_date = calendar.date(from: components)
+                                     components.day = 10
+                                     let end_date = calendar.date(from: components)
+                                     */
+                                    
+                                    var start_date = calendar.date(from: components)!
+                                    var end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
+                                    
+                                    print(start_date, end_date)
+                                    var myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
+                                    var cnt = 0
+                                    var avail = 0
+                                    for box in myTimeboxes {
+                                        if box.isAvailable {
+                                            avail += 1
+                                        }
+                                        cnt += 1
+                                    }
+                                    print(cnt)
+                                    print(avail)
+                                    let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
+                                    print(avail)
+                                }) {
+                                    Image(systemName: "clock.arrow.2.circlepath")
+                                        .resizable()
+                                        .frame(width: 16, height: 16)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .foregroundColor(.white)
+                                        .clipShape(Circle())
                                 }
-                                cnt += 1
+                                .padding(.trailing, 16)
+                                .padding(.bottom, geometry.safeAreaInsets.bottom)
                             }
-                            print(cnt)
-                            print(avail)
-                            let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
-                            print(avail)
-                        }) {
-                            Image(systemName: "clock.arrow.2.circlepath")
-                                .resizable()
-                                .frame(width: 32, height: 32)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .clipShape(Circle())
                         }
-                        .padding(.trailing, 16)
-                        .padding(.bottom, geometry.safeAreaInsets.bottom+16)
                     }
-                }
-            }
         )
     }
     

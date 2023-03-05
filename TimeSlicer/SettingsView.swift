@@ -21,12 +21,13 @@ struct SettingsView: View {
     
     var body: some View {
         NavigationView {
-            Form {
+            Form {/*
                 Section(header: Text("About")) {
                     Link(destination: URL(string: "https://www.example.com")!) {
                         Label("Visit our website", systemImage: "globe")
                     }
                 }
+                   */
 #if os(iOS)
                 Section(header: Text("Calendars")) {
                     Text("Selected calendars: \(selectedCals.count)")
