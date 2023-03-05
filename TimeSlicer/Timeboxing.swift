@@ -112,6 +112,10 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
     for tasks in sortedTasks {
         for myTask in tasks {
             print(myTask.title)
+            var taskComplete = false
+            if taskComplete {
+                continue
+            }
             var num_boxes_needed = myTask.duration / 10
             
             for i in 0..<scheduledTimeboxes.count {
@@ -124,7 +128,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
                     }
                 }
                 
-                if validStartTime {
+                if validStartTime && !taskComplete {
                     var eventStart = timebox.start
                     var eventEnd = eventStart.addingTimeInterval(TimeInterval(myTask.duration * 60))
                     
@@ -143,22 +147,20 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
                     do {
                         try eventStore.save(event, span: .thisEvent)
                         timebox.events.append(event)
-                        scheduledTimeboxes[i] = timebox
-                        num_boxes_needed -= 1
-                        continue
-                        
-                        if num_boxes_needed == 0 {
-                            break
+                        timebox.isAvailable = false
+                        for j in 0..<num_boxes_needed {
+                            print(j)
+                            scheduledTimeboxes[i+Int(j)].isAvailable = false
                         }
+                        scheduledTimeboxes[i] = timebox
+                        taskComplete = true
+                        
                         
                     } catch let error {
                         print("Error saving event: \(error.localizedDescription)")
                     }
                 }
                 
-                if num_boxes_needed == 0 {
-                    break
-                }
             }
         }
     }
