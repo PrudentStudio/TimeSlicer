@@ -77,6 +77,29 @@ struct ContentView: View {
                         Button(action: {
                            print("Hellllo")
                             print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
+                            print(Date().endOfWeek)
+                            let calendar = Calendar.current
+                            var components = DateComponents()
+                            components.year = 2023
+                            components.month = 03
+                            components.day = 04
+                            components.hour = 01
+                            components.minute = 59
+                            components.second = 59
+                            let start_date = calendar.date(from: components)
+                            components.day = 10
+                            let end_date = calendar.date(from: components)
+                            var myTimeboxes = createTimeboxes(from: start_date!, to: end_date!)
+                            var cnt = 0
+                            var avail = 0
+                            for box in myTimeboxes {
+                                if box.isAvailable {
+                                    avail += 1
+                                }
+                                cnt += 1
+                            }
+                            print(cnt)
+                            print(avail)
                         }) {
                             Image(systemName: "calendar.badge.plus")
                                 .resizable()
