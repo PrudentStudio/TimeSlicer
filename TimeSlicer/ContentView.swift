@@ -19,6 +19,7 @@ struct ContentView: View {
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
+        predicate: NSPredicate(format: "done == nil OR done == false"),
         animation: .default)
     private var items: FetchedResults<Tasks>
     
@@ -39,6 +40,13 @@ struct ContentView: View {
                     } label: {
                         Text(item.title!)
                             .padding()
+                    }.swipeActions(edge: .leading) {
+                        Button(action: {
+                            item.done = true
+                            
+                        }) {
+                            Label("Done", systemImage: "briefcase")
+                        }.tint(.green)
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -79,18 +87,28 @@ struct ContentView: View {
                            print("Hellllo")
                             print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
                             print(Date().endOfWeek)
+                            
                             let calendar = Calendar.current
-                            var components = DateComponents()
-                            components.year = 2023
+                            let components = calendar.dateComponents([.year, .month, .day], from: Date())
+                            
+
+                            /*
+                             components.year = 2023
                             components.month = 03
-                            components.day = 04
+                            components.day = 06
                             components.hour = 01
                             components.minute = 59
                             components.second = 59
                             let start_date = calendar.date(from: components)
                             components.day = 10
                             let end_date = calendar.date(from: components)
-                            var myTimeboxes = createTimeboxes(startDate: start_date!, endDate: end_date!)
+                             */
+                            
+                            var start_date = calendar.date(from: components)!
+                            var end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
+                            
+                            print(start_date, end_date)
+                            var myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date)
                             var cnt = 0
                             var avail = 0
                             for box in myTimeboxes {
@@ -118,6 +136,19 @@ struct ContentView: View {
                 }
             }
         )
+    }
+    
+    private func commit() {
+        withAnimation {
+            do {
+                try viewContext.save()
+            } catch {
+                // Replace this implementation with code to handle the error appropriately.
+                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
     }
 
     private func addItem() {
@@ -166,11 +197,39 @@ struct ContentView_Previews: PreviewProvider {
 }
 
 struct ItemDetail : View {
+    @Environment(\.managedObjectContext) private var viewContext
     let item: Tasks
+    
+    let date = Date()
+        let formatter = ISO8601DateFormatter()
 
     var body: some View {
-        VStack {
-            Text(item.desc!)
+        Form {
+            Section(header: Text("Task Details")) {
+                Text(item.desc ?? "No Description Provided")
+                HStack {
+                    Text("Due")
+                    Text(formatter.string(from: item.duedate!))
+                }
+            }
+            Section(header: Text("Actions")) {
+                Button(action: {
+                    item.done = true
+                    do {
+                        try viewContext.save()
+                    } catch {
+                        // Replace this implementation with code to handle the error appropriately.
+                        // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                        let nsError = error as NSError
+                        fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                    }
+                }) {
+                    Text("Mark as Done")
+                }
+                
+            }
+            
+            
         }
         .navigationTitle(item.title!)
     }

@@ -121,7 +121,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
             for i in 0..<scheduledTimeboxes.count {
                 var timebox = scheduledTimeboxes[i]
                 var validStartTime = true
-                for j in 0..<num_boxes_needed{
+                for j in 0..<num_boxes_needed+1{
                     if !timeboxes[i+Int(j)].isAvailable{
                         validStartTime = false
                         break
@@ -153,10 +153,8 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
                         timebox.events.append(event)
                         timebox.isAvailable = false
                         for j in 0..<num_boxes_needed {
-                            print(i+Int(j))
                             scheduledTimeboxes[i+Int(j)].isAvailable = false
                         }
-                        print(scheduledTimeboxes[i].isAvailable)
                         taskComplete = true
                         
                         
