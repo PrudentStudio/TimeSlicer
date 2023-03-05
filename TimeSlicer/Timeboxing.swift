@@ -63,7 +63,7 @@ func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
         let workingHoursEnd = calendar.date(bySettingHour: userDefinedEndComponents.hour!, minute: userDefinedEndComponents.minute!, second: 0, of: start)!
         let startComponents = calendar.dateComponents([.hour, .minute], from: start)
         let endComponents = calendar.dateComponents([.hour, .minute], from: end)
-        return start >= workingHoursStart && end <= workingHoursEnd && startComponents.hour! >= 8 && endComponents.hour! <= 20
+        return start >= workingHoursStart && end <= workingHoursEnd
     }
     
     let interval = 600.0 // 10 minutes
@@ -98,55 +98,70 @@ func createTimeboxes(startDate: Date, endDate: Date) -> [Timebox] {
 }
 
 func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox]) -> [Timebox] {
-    var sortedTasks = tasks.sorted {
-        $0.priority > $1.priority
-    }
+//    var sortedTasks = tasks.sorted {
+//        $0.priority > $1.priority
+//    }
+    let priority1 = tasks.filter {$0.priority == 1}.sorted {$0.priority > $1.priority}
+    let priority2 = tasks.filter {$0.priority == 2}.sorted {$0.priority > $1.priority}
+    let priority3 = tasks.filter {$0.priority == 3}.sorted {$0.priority > $1.priority}
+    let priority4 = tasks.filter {$0.priority == 4}.sorted {$0.priority > $1.priority}
+    var sortedTasks = [priority1, priority2, priority3, priority4]
     
     var scheduledTimeboxes = timeboxes
     
-    for myTask in sortedTasks {
-        var num_boxes_needed = myTask.duration / 10
-        
-        for i in 0..<scheduledTimeboxes.count {
-            var timebox = scheduledTimeboxes[i]
+    for tasks in sortedTasks {
+        for myTask in tasks {
+            print(myTask.title)
+            var num_boxes_needed = myTask.duration / 10
             
-            if timebox.isAvailable {
-                var eventStart = timebox.start
-                var eventEnd = eventStart.addingTimeInterval(TimeInterval(myTask.duration * 60))
-                
-                var event = EKEvent(eventStore: eventStore)
-                event.title = myTask.title
-                event.startDate = eventStart
-                event.endDate = eventEnd
-                event.calendar = eventStore.calendars(for: .event).first(where: { $0.title == "RyanMcTime" }) ?? {
-                    let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
-                    newCalendar.title = "RyanMcTime"
-                    newCalendar.source = EKEventStore().sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
-                    try? eventStore.saveCalendar(newCalendar, commit: true)
-                    return newCalendar
-                }()
-                
-                do {
-                    try eventStore.save(event, span: .thisEvent)
-                    timebox.events.append(event)
-                    scheduledTimeboxes[i] = timebox
-                    num_boxes_needed -= 1
-                    
-                    if num_boxes_needed == 0 {
+            for i in 0..<scheduledTimeboxes.count {
+                var timebox = scheduledTimeboxes[i]
+                var validStartTime = true
+                for j in 0..<num_boxes_needed{
+                    if !timeboxes[i+Int(j)].isAvailable{
+                        validStartTime = false
                         break
                     }
-                    
-                } catch let error {
-                    print("Error saving event: \(error.localizedDescription)")
                 }
-            }
-            
-            if num_boxes_needed == 0 {
-                break
+                
+                if validStartTime {
+                    var eventStart = timebox.start
+                    var eventEnd = eventStart.addingTimeInterval(TimeInterval(myTask.duration * 60))
+                    
+                    var event = EKEvent(eventStore: eventStore)
+                    event.title = myTask.title
+                    event.startDate = eventStart
+                    event.endDate = eventEnd
+                    event.calendar = eventStore.calendars(for: .event).first(where: { $0.title == "RyanMcTime" }) ?? {
+                        let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
+                        newCalendar.title = "RyanMcTime"
+                        newCalendar.source = EKEventStore().sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
+                        try? eventStore.saveCalendar(newCalendar, commit: true)
+                        return newCalendar
+                    }()
+                    
+                    do {
+                        try eventStore.save(event, span: .thisEvent)
+                        timebox.events.append(event)
+                        scheduledTimeboxes[i] = timebox
+                        num_boxes_needed -= 1
+                        continue
+                        
+                        if num_boxes_needed == 0 {
+                            break
+                        }
+                        
+                    } catch let error {
+                        print("Error saving event: \(error.localizedDescription)")
+                    }
+                }
+                
+                if num_boxes_needed == 0 {
+                    break
+                }
             }
         }
     }
-        
     return scheduledTimeboxes
 }
 
