@@ -85,10 +85,10 @@ struct ContentView: View {
                                 Spacer()
                                 Button(action: {
                                     print("Hellllo")
-                                    print(UserDefaults.standard.stringArray(forKey: "selectedCals"))
-                                    print(Date().endOfWeek)
+                                    print(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])
+                                    print(Date().endOfWeek!)
                                     
-                                    var aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+                                    let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
                                     
                                     var timeInterval = 60
                                     if aggressive {
@@ -111,11 +111,11 @@ struct ContentView: View {
                                      let end_date = calendar.date(from: components)
                                      */
                                     
-                                    var start_date = calendar.date(from: components)!
-                                    var end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
+                                    let start_date = calendar.date(from: components)!
+                                    let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
                                     
                                     print(start_date, end_date)
-                                    var myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
+                                    let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
                                     var cnt = 0
                                     var avail = 0
                                     for box in myTimeboxes {

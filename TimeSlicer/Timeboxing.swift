@@ -61,8 +61,8 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
             minute: userDefinedStartComponents.minute!,
             second: 0, of: start)!
         let workingHoursEnd = calendar.date(bySettingHour: userDefinedEndComponents.hour!, minute: userDefinedEndComponents.minute!, second: 0, of: start)!
-        let startComponents = calendar.dateComponents([.hour, .minute], from: start)
-        let endComponents = calendar.dateComponents([.hour, .minute], from: end)
+        //let startComponents = calendar.dateComponents([.hour, .minute], from: start)
+        //let endComponents = calendar.dateComponents([.hour, .minute], from: end)
         return start >= workingHoursStart && end <= workingHoursEnd
     }
     
@@ -155,10 +155,10 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
                 }
                 
                 if validStartTime && !taskComplete {
-                    var eventStart = timebox.start
-                    var eventEnd = eventStart.addingTimeInterval(TimeInterval(myTask.duration * 60))
+                    let eventStart = timebox.start
+                    let eventEnd = eventStart.addingTimeInterval(TimeInterval(myTask.duration * 60))
                     
-                    var event = EKEvent(eventStore: eventStore)
+                    let event = EKEvent(eventStore: eventStore)
                     event.title = myTask.title
                     event.startDate = eventStart
                     event.endDate = eventEnd
