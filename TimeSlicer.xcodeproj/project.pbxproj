@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA081AC29B455F600D8C372 /* Timeboxing.swift */; };
 		3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */; };
 		3EBCC7E629B3D85800AEA9F3 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */; };
 		3EBCC7E929B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E729B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3EA081AC29B455F600D8C372 /* Timeboxing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeboxing.swift; sourceTree = "<group>"; };
 		3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicerApp.swift; sourceTree = "<group>"; };
 		3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 		3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */ = {
 			isa = PBXGroup;
 			children = (
+				3EA081AC29B455F600D8C372 /* Timeboxing.swift */,
 				3EBCC7FC29B3F13000AEA9F3 /* SettingsView.swift */,
 				3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */,
 				3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */,
@@ -159,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3EBCC7E929B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld in Sources */,
+				3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */,
 				3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */,
 				3EBCC7EB29B3D85800AEA9F3 /* ContentView.swift in Sources */,
 				3EBCC7FD29B3F13000AEA9F3 /* SettingsView.swift in Sources */,
