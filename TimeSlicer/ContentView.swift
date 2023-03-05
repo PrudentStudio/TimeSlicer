@@ -46,7 +46,7 @@ struct ContentView: View {
                             
                         }) {
                             Label("Done", systemImage: "briefcase")
-                        }.tint(.green)
+                        }.tint(.teal)
                     }
                 }
                 .onDelete(perform: deleteItems)

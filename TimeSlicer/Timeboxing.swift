@@ -124,13 +124,13 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
     let priority2 = tasks.filter {$0.priority == 2}.sorted {$0.priority > $1.priority}
     let priority3 = tasks.filter {$0.priority == 3}.sorted {$0.priority > $1.priority}
     let priority4 = tasks.filter {$0.priority == 4}.sorted {$0.priority > $1.priority}
-    var sortedTasks = [priority1, priority2, priority3, priority4]
+    let sortedTasks = [priority1, priority2, priority3, priority4]
     
     var scheduledTimeboxes = timeboxes
     
     for tasks in sortedTasks {
         for myTask in tasks {
-            print(myTask.title)
+            print(myTask.title!)
             var taskComplete = false
             if taskComplete {
                 continue
