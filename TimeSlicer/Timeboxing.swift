@@ -79,6 +79,10 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
             timebox.isAvailable = true
         }
         
+        if (currentStart < Date.now) {
+            timebox.isAvailable = false
+        }
+        
         for myEvent in events {
             if (myEvent.isAllDay) {
                 continue
@@ -120,13 +124,27 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
 //        $0.priority > $1.priority
 //    }
     cleanCalendar()
-    let priority1 = tasks.filter {$0.priority == 1}.sorted {$0.priority > $1.priority}
-    let priority2 = tasks.filter {$0.priority == 2}.sorted {$0.priority > $1.priority}
-    let priority3 = tasks.filter {$0.priority == 3}.sorted {$0.priority > $1.priority}
-    let priority4 = tasks.filter {$0.priority == 4}.sorted {$0.priority > $1.priority}
+    let priority1 = tasks.filter {$0.priority == 1}.sorted {$0.duedate! < $1.duedate!}
+    let priority2 = tasks.filter {$0.priority == 2}.sorted {$0.duedate! < $1.duedate!}
+    let priority3 = tasks.filter {$0.priority == 3}.sorted {$0.duedate! < $1.duedate!}
+    let priority4 = tasks.filter {$0.priority == 4}.sorted {$0.duedate! < $1.duedate!}
     let sortedTasks = [priority1, priority2, priority3, priority4]
     
     var scheduledTimeboxes = timeboxes
+    
+    let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+    let myCalendar = eventStore.calendars(for: .event).first(where: { $0.title == "RyanMcTime" }) ?? {
+        let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
+        newCalendar.title = "RyanMcTime"
+        if calIdentifier == "" {
+            newCalendar.source = EKEventStore().sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
+        } else {
+            newCalendar.source = EKEventStore().source(withIdentifier: calIdentifier)
+        }
+        
+        try? eventStore.saveCalendar(newCalendar, commit: true)
+        return newCalendar
+    }()
     
     for tasks in sortedTasks {
         for myTask in tasks {
@@ -162,13 +180,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
                     event.title = myTask.title
                     event.startDate = eventStart
                     event.endDate = eventEnd
-                    event.calendar = eventStore.calendars(for: .event).first(where: { $0.title == "RyanMcTime" }) ?? {
-                        let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
-                        newCalendar.title = "RyanMcTime"
-                        newCalendar.source = EKEventStore().sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
-                        try? eventStore.saveCalendar(newCalendar, commit: true)
-                        return newCalendar
-                    }()
+                    event.calendar = myCalendar
                     
                     do {
                         try eventStore.save(event, span: .thisEvent)

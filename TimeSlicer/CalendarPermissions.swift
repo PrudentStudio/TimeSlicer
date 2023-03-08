@@ -11,7 +11,7 @@ import EventKit
 let eventStore = EKEventStore()
 
 struct CalendarPermissions: View {
-    @State private var isCalendarPermissionGranted = false
+    @State private var isCalendarPermissionGranted: Bool = false
     @State public var selectedSource: EKSource?
     @State private var allSources: [EKSource] = []
     
@@ -35,10 +35,13 @@ struct CalendarPermissions: View {
                 Section(header: Text("Step 1 - Primary Calendar Source")) {
                     Text("Which Calendar source do you want us to write the tasks to?")
                     Picker("Primary Calendar", selection: $selectedSource) {
-                        ForEach(allSources, id: \.sourceIdentifier) { source in
+                        ForEach(allSources, id: \.title) { source in
                             Text(source.title)
+                                .tag(source as EKSource?)
                         }
                         
+                    }.onChange(of: selectedSource) { _ in
+                        UserDefaults.standard.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
                     }
                 }
                 Section(header: Text("Step 2 - Configure ze App")) {
@@ -51,14 +54,37 @@ struct CalendarPermissions: View {
         })
     }
     
+    
     func fetchSources(){
         let eventStore = EKEventStore()
         let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
         
-        DispatchQueue.main.async {
-            self.allSources = sources
-            self.selectedSource = sources.first
+        let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+        
+        if (calIdentifier == "" ) {
+            DispatchQueue.main.async {
+                self.allSources = sources
+                self.selectedSource = sources.first
+            }
+        } else {
+            print("identifier saved is")
+            print(calIdentifier)
+            for source in sources {
+                print("found")
+                print(source.sourceIdentifier)
+                if (source.sourceIdentifier.trimmingCharacters(in: .whitespaces) == calIdentifier.trimmingCharacters(in: .whitespaces)) {
+                    DispatchQueue.main.async {
+                        self.allSources = sources
+                        self.selectedSource = source
+                    }
+                }
+            }
+            
         }
+        
+        
+        
+        
     }
     
     func requestCalendarPermission() {
