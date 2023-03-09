@@ -33,7 +33,7 @@ struct CalendarPermissions: View {
                     }
                 }
                 Section(header: Text("Step 1 - Primary Calendar Source")) {
-                    Text("Which Calendar source do you want us to write the tasks to?")
+                    Text("Which Calendar source do you want us to write the tasks to? If you choose a Google Calendar, you will have to first manually go and create a calendar titled \"TimeSlicer\".")
                     Picker("Primary Calendar", selection: $selectedSource) {
                         ForEach(allSources, id: \.title) { source in
                             Text(source.title)
@@ -81,9 +81,6 @@ struct CalendarPermissions: View {
             }
             
         }
-        
-        
-        
         
     }
     

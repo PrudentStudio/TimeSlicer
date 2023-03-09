@@ -17,6 +17,8 @@ struct SettingsView: View {
     @State public var aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
     let eventStore = EKEventStore()
     @State var selectedCals: [String] = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
+    @State public var selectedSource: EKSource?
+    @State private var allSources: [EKSource] = []
     @State private var isPresentingCalendarChooser = false
     
     var body: some View {
@@ -31,13 +33,22 @@ struct SettingsView: View {
 #if os(iOS)
                 Section(header: Text("Calendars")) {
                     Text("Selected calendars: \(selectedCals.count)")
-                    Button("Choose Calendars") {
+                    Button("Choose Calendars to View Events For") {
                         isPresentingCalendarChooser = true
                     }
                     .sheet(isPresented: $isPresentingCalendarChooser, onDismiss: {
                         selectedCals = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
                     }) {
                         CalendarChooserView(selectedCalendars: $selectedCals)
+                    }
+                    Picker("Primary Calendar", selection: $selectedSource) {
+                        ForEach(allSources, id: \.title) { source in
+                            Text(source.title)
+                                .tag(source as EKSource?)
+                        }
+                        
+                    }.onChange(of: selectedSource) { _ in
+                        UserDefaults.standard.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
                     }
                     Button("Clear selected calendars", role: .destructive){
                         UserDefaults.standard.set([], forKey: "selectedCals")
@@ -53,8 +64,16 @@ struct SettingsView: View {
                 }
                 Section(header: Text("Scheduling Style")){
                     Toggle("Aggressive", isOn: $aggressive)
+                    
+                }
+                Section(header: Text("Danger Zone")) {
                     Button("Force Delete App Calendar", role: .destructive) {
                         cleanCalendar()
+                    }
+                    Button("Reset OnBoarding Screen", role: .destructive) {
+                        UserDefaults.standard.set(false, forKey: "onboarded")
+                        print(!(UserDefaults.standard.bool(forKey: "onboarded")))
+                        print((UserDefaults.standard.bool(forKey: "onboarded")))
                     }
                 }
                 
@@ -73,6 +92,7 @@ struct SettingsView: View {
             UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
         }
         .onAppear(){
+            fetchSources()
             aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
             dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
             dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
@@ -80,6 +100,30 @@ struct SettingsView: View {
         }
     }
 
+    func fetchSources(){
+        let eventStore = EKEventStore()
+        let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
+        
+        let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+        
+        if (calIdentifier == "" ) {
+            DispatchQueue.main.async {
+                self.allSources = sources
+                self.selectedSource = sources.first
+            }
+        } else {
+            for source in sources {
+                if (source.sourceIdentifier.trimmingCharacters(in: .whitespaces) == calIdentifier.trimmingCharacters(in: .whitespaces)) {
+                    DispatchQueue.main.async {
+                        self.allSources = sources
+                        self.selectedSource = source
+                    }
+                }
+            }
+            
+        }
+        
+    }
     
 }
 

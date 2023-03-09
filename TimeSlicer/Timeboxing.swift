@@ -103,14 +103,25 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
 
 func cleanCalendar(){
     let calendars = eventStore.calendars(for: .event)
-    let calendarToDelete = calendars.first(where: { $0.title == "RyanMcTime" })
+    let calendarToDelete = calendars.first(where: { $0.title == "TimeSlicer" })
 
     if let calendar = calendarToDelete {
         do {
             try eventStore.removeCalendar(calendar, commit: true)
             print("Calendar deleted successfully")
         } catch {
-            print("Error deleting calendar: \(error.localizedDescription)")
+            print("Error deleting calendar: \(error.localizedDescription), trying to delete individual items")
+            let oneMonthAgo = Date(timeIntervalSinceNow: -30*24*3600)
+            let oneMonthAfter = Date(timeIntervalSinceNow: 30*24*3600)
+            let predicate = eventStore.predicateForEvents(withStart: oneMonthAgo, end: oneMonthAfter, calendars: [calendar])
+            let events = eventStore.events(matching: predicate)
+            for event in events {
+                do {
+                    try eventStore.remove(event, span: .thisEvent)
+                } catch {
+                    print("Error removing event: \(error.localizedDescription)")
+                }
+            }
         }
     } else {
         print("Calendar not found")
@@ -124,6 +135,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
 //        $0.priority > $1.priority
 //    }
     cleanCalendar()
+    var errored = false
     let priority1 = tasks.filter {$0.priority == 1}.sorted {$0.duedate! < $1.duedate!}
     let priority2 = tasks.filter {$0.priority == 2}.sorted {$0.duedate! < $1.duedate!}
     let priority3 = tasks.filter {$0.priority == 3}.sorted {$0.duedate! < $1.duedate!}
@@ -133,18 +145,29 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
     var scheduledTimeboxes = timeboxes
     
     let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
-    let myCalendar = eventStore.calendars(for: .event).first(where: { $0.title == "RyanMcTime" }) ?? {
+    let myCalendar = eventStore.calendars(for: .event).first(where: { $0.title == "TimeSlicer" }) ?? {
         let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
-        newCalendar.title = "RyanMcTime"
+        newCalendar.title = "TimeSlicer"
         if calIdentifier == "" {
-            newCalendar.source = EKEventStore().sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
+            newCalendar.source = eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local }).first
         } else {
-            newCalendar.source = EKEventStore().source(withIdentifier: calIdentifier)
+            newCalendar.source = eventStore.source(withIdentifier: calIdentifier)
         }
+        print(newCalendar.source)
+        //print(newCalendar.source.allowsCalendarAdditions)
+        do {
+            try eventStore.saveCalendar(newCalendar, commit: true)
+        } catch {
+            errored = true
+            print(error)
         
-        try? eventStore.saveCalendar(newCalendar, commit: true)
+        }
         return newCalendar
     }()
+    
+    if errored {
+        return []
+    }
     
     for tasks in sortedTasks {
         for myTask in tasks {
@@ -183,6 +206,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
                     event.calendar = myCalendar
                     
                     do {
+                        //try eventStore.save(event, span: .thisEvent)
                         try eventStore.save(event, span: .thisEvent)
                         timebox.events.append(event)
                         timebox.isAvailable = false

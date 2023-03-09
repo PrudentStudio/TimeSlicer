@@ -13,13 +13,14 @@ import AlertToast
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    @State private var isPresentingSheet = true // Hardcoding for demo, otherwise !(checkCalendarAuthorizationStatus)
+    @State private var isPresentingSheet = !(UserDefaults.standard.bool(forKey: "onboarded"))
     @State private var isPresentingAddTask = false
     
     @State private var searchText = ""
     @State private var showCancelButton = false
     
     @State private var showToast = false
+    @State private var showErrorToast = false
     
     @FetchRequest(
         sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
@@ -57,6 +58,11 @@ struct ContentView: View {
             }.searchable(text: $searchText)
             .toolbar {
                 ToolbarItem {
+                    NavigationLink(destination: HelpView()) {
+                        Label("Help", systemImage: "questionmark.circle")
+                    }
+                }
+                ToolbarItem {
                     NavigationLink(destination: SettingsView()) {
                         Label("Settings", systemImage: "gear")
                     }
@@ -75,15 +81,21 @@ struct ContentView: View {
             .navigationBarTitle("TimeSlicer", displayMode: .large)
             Text("Select an item")
                 
-        }.sheet(isPresented: $isPresentingSheet) {
+        }.sheet(isPresented: $isPresentingSheet, onDismiss: {
+            UserDefaults.standard.set(true, forKey: "onboarded")
+            print("just set", UserDefaults.standard.bool(forKey: "onboarded"))
+        }) {
             CalendarPermissions(isPresentingSheet: $isPresentingSheet)
         }.sheet(isPresented: $isPresentingAddTask) {
             TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
                 .environment(\.managedObjectContext, viewContext)
-        }.toast(isPresenting: $showToast){
+        }.toast(isPresenting: $showToast, duration: 4){
             
             // `.alert` is the default displayMode
             AlertToast(type: .complete(.teal), title: "Calendar Organized!")
+            
+        }.toast(isPresenting: $showErrorToast, duration: 4) {
+            AlertToast(displayMode: .hud, type: .error(.red), title: "Error Creating Calendar", subTitle: "Please click on the help icon for more details")
         }
         .overlay(
                     GeometryReader { geometry in
@@ -127,8 +139,13 @@ struct ContentView: View {
                                         }
                                         cnt += 1
                                     }
-                                    let _ = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
-                                    showToast = true
+                                    let myTasks = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
+                                    if myTasks.count < items.count {
+                                        showErrorToast = true
+                                    } else {
+                                        showToast = true
+                                    }
+                                    
                                 }) {
                                     Image(systemName: "clock.arrow.2.circlepath")
                                         .resizable()

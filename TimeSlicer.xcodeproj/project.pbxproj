@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3E165C7429B96817001065CB /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E165C7329B96817001065CB /* HelpView.swift */; };
 		3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA081AC29B455F600D8C372 /* Timeboxing.swift */; };
 		3EA081B029B50D5C00D8C372 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 3EA081AF29B50D5C00D8C372 /* AlertToast */; };
 		3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3E165C7329B96817001065CB /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HelpView.swift; path = TimeSlicer/HelpView.swift; sourceTree = "<group>"; };
 		3EA081AC29B455F600D8C372 /* Timeboxing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeboxing.swift; sourceTree = "<group>"; };
 		3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicerApp.swift; sourceTree = "<group>"; };
@@ -50,6 +52,7 @@
 		3EBCC7D729B3D85800AEA9F3 = {
 			isa = PBXGroup;
 			children = (
+				3E165C7329B96817001065CB /* HelpView.swift */,
 				3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */,
 				3EBCC7E129B3D85800AEA9F3 /* Products */,
 			);
@@ -169,6 +172,7 @@
 				3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */,
 				3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */,
 				3EBCC7EB29B3D85800AEA9F3 /* ContentView.swift in Sources */,
+				3E165C7429B96817001065CB /* HelpView.swift in Sources */,
 				3EBCC7FD29B3F13000AEA9F3 /* SettingsView.swift in Sources */,
 				3EBCC7F829B3DA4E00AEA9F3 /* CalendarPermissions.swift in Sources */,
 				3EBCC7E629B3D85800AEA9F3 /* Persistence.swift in Sources */,
