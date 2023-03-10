@@ -18,7 +18,7 @@ struct TaskCreatorSheet: View {
     @Binding var isPresentingAddTask: Bool
         
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(header: Text("Task Details")) {
                         TextField("Task Title", text: $title)
@@ -46,25 +46,20 @@ struct TaskCreatorSheet: View {
                 }
                 .navigationTitle("New Task")
                 .toolbar {
-                    ToolbarItem(
-                        placement: .automatic
-                    ) {
-                    
+                    ToolbarItem(placement: .automatic) {
                         Button(action: {
                             if !(title=="") || !(description=="") {
-                            let newItem = Tasks(context: viewContext)
-                            newItem.timestamp = Date()
-                            newItem.title = title
-                            newItem.desc = description
-                            newItem.duedate = dueDate
-                            newItem.duration = Int16(duration)
+                                let newItem = Tasks(context: viewContext)
+                                newItem.timestamp = Date()
+                                newItem.title = title
+                                newItem.desc = description
+                                newItem.duedate = dueDate
+                                newItem.duration = Int16(duration)
                                 newItem.priority = Int16(priority)
 
                                 do {
                                     try viewContext.save()
                                 } catch {
-                                    // Replace this implementation with code to handle the error appropriately.
-                                    // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
                                     let nsError = error as NSError
                                     fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
                                 }
@@ -72,8 +67,19 @@ struct TaskCreatorSheet: View {
                             isPresentingAddTask = false
                         }) {
                             Text("Save")
+                                .help("Add Task")
                         }
                     }
+                    ToolbarItem(placement: .automatic) {
+                            Button("Cancel") {
+                                isPresentingAddTask = false
+                            }
+                            .keyboardShortcut(.cancelAction)
+                            .foregroundColor(.red) // Set the foreground color to red to indicate it's destructive
+                            .padding(.trailing, 20)
+                            .help("Discard changes")
+                            .accessibility(label: Text("Cancel"))
+                        }
                 }
             }
         }

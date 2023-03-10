@@ -102,6 +102,7 @@ struct ContentView: View {
         }.sheet(isPresented: $isPresentingAddTask) {
             TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
                 .environment(\.managedObjectContext, viewContext)
+                .padding(.vertical, 20)
         }.toast(isPresenting: $showToast, duration: 4){
             
             // `.alert` is the default displayMode

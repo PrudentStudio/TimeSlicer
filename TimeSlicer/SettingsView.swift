@@ -22,7 +22,7 @@ struct SettingsView: View {
     @State private var isPresentingCalendarChooser = false
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {/*
                 Section(header: Text("About")) {
                     Link(destination: URL(string: "https://www.example.com")!) {
