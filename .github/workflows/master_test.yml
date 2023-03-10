@@ -7,14 +7,13 @@ on:
 jobs:
   master_test:
     runs-on: macos-latest
-
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
 
       - name: Find first scheme of default project
-	env:
-	  ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           echo "::set-env name=SCHEME::TimeSlicer"
       - name: Build and test app
