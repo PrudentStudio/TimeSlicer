@@ -47,8 +47,21 @@ struct ContentView: View {
                     NavigationLink {
                         ItemDetail(item: item)
                     } label: {
-                        Text(item.title!)
-                            .padding()
+                        
+                        #if os(macOS)
+                        VStack {
+                            
+                            HStack{Text(item.title!)
+                                .padding()
+                                
+                            }
+                            Divider()
+
+                        }
+                        #elseif os(iOS)
+                        Text(item.title)
+                            .paddig()
+                        #endif
                     }.swipeActions(edge: .leading) {
                         Button(action: {
                             item.done = true
@@ -75,12 +88,12 @@ struct ContentView: View {
                     }
                     #endif
                 }
+#if os(iOS)
                 ToolbarItem {
                     NavigationLink(destination: SettingsView()) {
                         Label("Settings", systemImage: "gear")
                     }
                 }
-#if os(iOS)
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
@@ -130,19 +143,6 @@ struct ContentView: View {
                                     
                                     let calendar = Calendar.current
                                     let components = calendar.dateComponents([.year, .month, .day], from: Date())
-                                    
-                                    
-                                    /*
-                                     components.year = 2023
-                                     components.month = 03
-                                     components.day = 06
-                                     components.hour = 01
-                                     components.minute = 59
-                                     components.second = 59
-                                     let start_date = calendar.date(from: components)
-                                     components.day = 10
-                                     let end_date = calendar.date(from: components)
-                                     */
                                     
                                     let start_date = calendar.date(from: components)!
                                     let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60

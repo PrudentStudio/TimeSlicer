@@ -72,6 +72,14 @@ struct CalendarSettingsView: View {
                     Toggle("Aggressive", isOn: $aggressive)
                     
                 }
+                Section {
+                    Button("Save Changes") {
+                        print("Saving")
+                        UserDefaults.standard.set(aggressive, forKey: "Aggressive")
+                        UserDefaults.standard.set(dayStart, forKey: "DayStart")
+                        UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
+                    }
+                }
             }
             .onAppear(){
                 fetchSources()
@@ -80,18 +88,12 @@ struct CalendarSettingsView: View {
                 dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
                 print(dayStart)
             }
-            .onDisappear(){
-                print("Closing and saving")
-                UserDefaults.standard.set(aggressive, forKey: "Aggressive")
-                UserDefaults.standard.set(dayStart, forKey: "DayStart")
-                UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
-            }
+            
             Spacer()
         }
         .sheet(isPresented: $isShowingCalendarPicker) {
             EKCalendarPickerView()
         }
-        
     }
     
     func fetchSources(){
