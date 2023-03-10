@@ -16,13 +16,11 @@ struct SettingsView: View {
     @State public var dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
     @State public var aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
     let eventStore = EKEventStore()
-    @State var selectedCals: [String] = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
     @State public var selectedSource: EKSource?
     @State private var allSources: [EKSource] = []
     @State private var isPresentingCalendarChooser = false
     
     var body: some View {
-        NavigationStack {
             Form {/*
                 Section(header: Text("About")) {
                     Link(destination: URL(string: "https://www.example.com")!) {
@@ -32,16 +30,13 @@ struct SettingsView: View {
                    */
 #if os(iOS)
                 Section(header: Text("Calendars")) {
-                    Text("Selected calendars: \(selectedCals.count)")
-                    Button("Choose Calendars to View Events For") {
+                    Button("Pick Calendars to Sync With") {
                         isPresentingCalendarChooser = true
                     }
-                    .sheet(isPresented: $isPresentingCalendarChooser, onDismiss: {
-                        selectedCals = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
-                    }) {
-                        CalendarChooserView(selectedCalendars: $selectedCals)
+                    .sheet(isPresented: $isPresentingCalendarChooser) {
+                        EKCalendarPickerView()
                     }
-                    Picker("Primary Calendar", selection: $selectedSource) {
+                    Picker("Primary Calendar Account to Write To", selection: $selectedSource) {
                         ForEach(allSources, id: \.title) { source in
                             Text(source.title)
                                 .tag(source as EKSource?)
@@ -49,10 +44,6 @@ struct SettingsView: View {
                         
                     }.onChange(of: selectedSource) { _ in
                         UserDefaults.standard.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
-                    }
-                    Button("Clear selected calendars", role: .destructive){
-                        UserDefaults.standard.set([], forKey: "selectedCals")
-                        selectedCals = []
                     }
 
                    
@@ -83,10 +74,9 @@ struct SettingsView: View {
             .listStyle(GroupedListStyle())
 #endif
             .navigationTitle("Settings")
-        }
+        
         .onDisappear(){
             print("Closing and saving")
-            UserDefaults.standard.set(selectedCals, forKey: "selectedCals")
             UserDefaults.standard.set(aggressive, forKey: "Aggressive")
             UserDefaults.standard.set(dayStart, forKey: "DayStart")
             UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
@@ -96,7 +86,6 @@ struct SettingsView: View {
             aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
             dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
             dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
-            selectedCals = UserDefaults.standard.stringArray(forKey: "selectedCals") ?? []
         }
     }
 

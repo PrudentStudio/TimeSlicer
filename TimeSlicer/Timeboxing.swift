@@ -29,9 +29,24 @@ func numBoxes(from_start: Date, to_end: Date, time_interval: Int = 10) -> Int {
 }
 
 func getEvents(from_start: Date, to_end: Date) -> [EKEvent] {
-    let myCalendarIdentifiers = UserDefaults.standard.stringArray(forKey: "selectedCals")
-    let myCalendars = getCalendarsByIdentifiers(myCalendarIdentifiers ?? [])
+    var myCalendarIdentifiers: [String] = []
+    
     let eventStore = EKEventStore()
+    let sources = eventStore.sources
+    
+    var calendarDict: [EKSource: [EKCalendar]] = [:]
+    for source in sources {
+        let cals = source.calendars(for: .event)
+        if !cals.isEmpty {
+            calendarDict[source] = Array(cals)
+        }
+    }
+    
+    myCalendarIdentifiers = calendarDict.values.flatMap { calendar in
+        calendar.filter { $0.shouldSync}.map { $0.calendarIdentifier }
+    }
+    
+    let myCalendars = getCalendarsByIdentifiers(myCalendarIdentifiers)
     let predicate = eventStore.predicateForEvents(withStart: from_start, end: to_end, calendars: Array(myCalendars ?? []))
     let events = eventStore.events(matching: predicate)
     return events
