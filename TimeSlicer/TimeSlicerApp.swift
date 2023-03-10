@@ -16,5 +16,10 @@ struct TimeSlicerApp: App {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
+        #if os(macOS)
+        Settings {
+            MacSettingsView()
+        }
+        #endif
     }
 }

@@ -96,7 +96,6 @@ struct ContentView: View {
             #elseif os(OSX)
             .navigationTitle("TimeSlicer")
             #endif
-            Text("Select an item")
                 
         }.sheet(isPresented: $isPresentingSheet, onDismiss: {
             UserDefaults.standard.set(true, forKey: "onboarded")
