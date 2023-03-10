@@ -187,8 +187,8 @@ struct CalendarChooserView: UIViewControllerRepresentable {
         }
     }
 }
+#endif
 
-    
 func getCalendarsByIdentifiers(_ identifiers: [String]) -> Set<EKCalendar>? {
     let eventStore = EKEventStore()
     let calendars = eventStore.calendars(for: .event)
@@ -202,4 +202,3 @@ func getCalendarsByIdentifiers(_ identifiers: [String]) -> Set<EKCalendar>? {
     
     return result.isEmpty ? [] : Set(result)
 }
-#endif

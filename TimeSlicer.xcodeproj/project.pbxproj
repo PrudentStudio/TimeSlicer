@@ -22,7 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3E165C7329B96817001065CB /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HelpView.swift; path = TimeSlicer/HelpView.swift; sourceTree = "<group>"; };
+		3E165C7329B96817001065CB /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		3EA081AC29B455F600D8C372 /* Timeboxing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeboxing.swift; sourceTree = "<group>"; };
 		3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicerApp.swift; sourceTree = "<group>"; };
@@ -52,7 +52,6 @@
 		3EBCC7D729B3D85800AEA9F3 = {
 			isa = PBXGroup;
 			children = (
-				3E165C7329B96817001065CB /* HelpView.swift */,
 				3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */,
 				3EBCC7E129B3D85800AEA9F3 /* Products */,
 			);
@@ -69,6 +68,7 @@
 		3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */ = {
 			isa = PBXGroup;
 			children = (
+				3E165C7329B96817001065CB /* HelpView.swift */,
 				3EA081AC29B455F600D8C372 /* Timeboxing.swift */,
 				3EBCC7FC29B3F13000AEA9F3 /* SettingsView.swift */,
 				3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */,

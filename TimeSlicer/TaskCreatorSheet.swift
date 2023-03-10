@@ -46,8 +46,9 @@ struct TaskCreatorSheet: View {
                 }
                 .navigationTitle("New Task")
                 .toolbar {
-                    #if os(iOS)
-                    ToolbarItem(placement: .navigationBarTrailing) {
+                    ToolbarItem(
+                        placement: .automatic
+                    ) {
                     
                         Button(action: {
                             if !(title=="") || !(description=="") {
@@ -73,7 +74,6 @@ struct TaskCreatorSheet: View {
                             Text("Save")
                         }
                     }
-                    #endif
                 }
             }
         }

@@ -16,5 +16,8 @@ struct TimeSlicerApp: App {
             ContentView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
+        #if os(macOS)
+        .defaultSize(width: 1000, height: 650)
+        #endif
     }
 }

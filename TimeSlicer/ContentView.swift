@@ -13,7 +13,7 @@ import AlertToast
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    @State private var isPresentingSheet = !(UserDefaults.standard.bool(forKey: "onboarded"))
+    @State private var isPresentingSheet = false//!(UserDefaults.standard.bool(forKey: "onboarded"))
     @State private var isPresentingAddTask = false
     
     @State private var searchText = ""
@@ -37,7 +37,7 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 ForEach(searchResults, id: \.self) { item in
                     NavigationLink {
@@ -58,9 +58,18 @@ struct ContentView: View {
             }.searchable(text: $searchText)
             .toolbar {
                 ToolbarItem {
+                    #if os(iOS)
                     NavigationLink(destination: HelpView()) {
                         Label("Help", systemImage: "questionmark.circle")
                     }
+                    #elseif os(macOS)
+                    Button(action: {
+                        let windowController = HelpWindowController()
+                        windowController.showWindow(nil)
+                    }) {
+                        Label("Help", systemImage: "questionmark.circle")
+                    }
+                    #endif
                 }
                 ToolbarItem {
                     NavigationLink(destination: SettingsView()) {
@@ -78,7 +87,11 @@ struct ContentView: View {
                     }
                 }
             }
+            #if os(iOS)
             .navigationBarTitle("TimeSlicer", displayMode: .large)
+            #elseif os(OSX)
+            .navigationTitle("TimeSlicer")
+            #endif
             Text("Select an item")
                 
         }.sheet(isPresented: $isPresentingSheet, onDismiss: {
