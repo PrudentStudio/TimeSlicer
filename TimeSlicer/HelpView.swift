@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import EventKit
 
 #if os(macOS)
 class HelpWindowController: NSWindowController {
@@ -33,17 +34,67 @@ class HelpWindowController: NSWindowController {
 #endif
 
 struct HelpView: View {
+    @State private var isCalendarPermissionGranted: Bool = false
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack {
                     Text("Unable to create a calendar")
                     Text("If the app is telling you that it is unable to create the calendar, you are most likely using a Google Calendar account. You will manually have to create a calendar titled \"TimeSlicer\".")
+                    Text("Another possible reason is that you did not grant the neceassry permissions. TimeSlicer requires permission for the Calendar to be able to work properly.")
                         .lineLimit(nil)
                         .fixedSize(horizontal: false, vertical: true)
+                    if (checkCalendarAuthorizationStatus()) {
+                        Text("You have already granted these permissions")
+                    } else {
+                        Button(action: {
+                            requestCalendarPermission()
+                        }) {
+                            Text("Grant Calendar Permission")
+                        }
+                    }
                 }
                 .padding()
             }
+        }
+    }
+    
+    func requestCalendarPermission() {
+        let eventStore = EKEventStore()
+        
+        switch EKEventStore.authorizationStatus(for: .event) {
+        case .authorized:
+            isCalendarPermissionGranted = true
+        case .denied:
+            isCalendarPermissionGranted = false
+        case .notDetermined:
+            eventStore.requestAccess(to: .event) { (granted, error) in
+                DispatchQueue.main.async {
+                    isCalendarPermissionGranted = granted
+                }
+                
+            }
+        case .restricted:
+            isCalendarPermissionGranted = false
+        @unknown default:
+            isCalendarPermissionGranted = false
+        }
+    }
+    
+    func checkCalendarAuthorizationStatus() -> Bool {
+        let status = EKEventStore.authorizationStatus(for: .event)
+        switch status {
+        case .authorized:
+            // The app has permission to access the user's calendar
+            return true
+        case .denied, .restricted:
+            // The app does not have permission to access the user's calendar
+            return false
+        case .notDetermined:
+            // The user has not yet been asked to grant permission to the app
+            return false
+        @unknown default:
+            return false
         }
     }
 }

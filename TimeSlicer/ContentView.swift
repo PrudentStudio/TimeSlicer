@@ -59,8 +59,8 @@ struct ContentView: View {
 
                         }
                         #elseif os(iOS)
-                        Text(item.title)
-                            .paddig()
+                        Text(item.title!)
+                            .padding()
                         #endif
                     }.swipeActions(edge: .leading) {
                         Button(action: {
@@ -164,6 +164,7 @@ struct ContentView: View {
                                     }
                                     
                                 }) {
+                                    #if os(iOS)
                                     Image(systemName: "clock.arrow.2.circlepath")
                                         .resizable()
                                         .frame(width: 16, height: 16)
@@ -171,6 +172,9 @@ struct ContentView: View {
                                         .background(Color.blue)
                                         .foregroundColor(.white)
                                         .clipShape(Circle())
+                                    #elseif os(macOS)
+                                    Text("Schedule Calendar")
+                                    #endif
                                 }
                                 .padding(.trailing, 16)
                                 .padding(.bottom, geometry.safeAreaInsets.bottom)

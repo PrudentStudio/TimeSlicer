@@ -160,6 +160,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
     var scheduledTimeboxes = timeboxes
     
     let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+    print("primaryy source is \(calIdentifier)")
     let myCalendar = eventStore.calendars(for: .event).first(where: { $0.title == "TimeSlicer" }) ?? {
         let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
         newCalendar.title = "TimeSlicer"
