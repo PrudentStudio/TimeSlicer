@@ -41,147 +41,122 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(searchResults, id: \.self) { item in
-                    NavigationLink {
-                        ItemDetail(item: item)
-                    } label: {
-                        
-                        #if os(macOS)
-                        VStack {
+        ZStack {
+            NavigationStack {
+                List {
+                    ForEach(searchResults, id: \.self) { item in
+                        NavigationLink {
+                            ItemDetail(item: item)
+                        } label: {
                             
-                            HStack{Text(item.title!)
-                                .padding()
+#if os(macOS)
+                            VStack {
+                                
+                                HStack{Text(item.title!)
+                                        .padding()
+                                    
+                                }
+                                Divider()
                                 
                             }
-                            Divider()
-
-                        }
-                        #elseif os(iOS)
-                        Text(item.title!)
-                            .padding()
-                        #endif
-                    }.swipeActions(edge: .leading) {
-                        Button(action: {
-                            item.done = true
-                            
-                        }) {
-                            Label("Done", systemImage: "briefcase")
-                        }.tint(.teal)
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }.searchable(text: $searchText)
-            .toolbar {
-                ToolbarItem {
-                    #if os(iOS)
-                    NavigationLink(destination: HelpView()) {
-                        Label("Help", systemImage: "questionmark.circle")
-                    }
-                    #elseif os(macOS)
-                    Button(action: {
-                        let windowController = HelpWindowController()
-                        windowController.showWindow(nil)
-                    }) {
-                        Label("Help", systemImage: "questionmark.circle")
-                    }
-                    #endif
-                }
-#if os(iOS)
-                ToolbarItem {
-                    NavigationLink(destination: SettingsView()) {
-                        Label("Settings", systemImage: "gear")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
+#elseif os(iOS)
+                            Text(item.title!)
+                                .padding()
 #endif
-                ToolbarItem {
-                    Button(action: {isPresentingAddTask=true}){//addItem) {
-                        Label("Add Item", systemImage: "plus")
+                        }.swipeActions(edge: .leading) {
+                            Button(action: {
+                                item.done = true
+                                
+                            }) {
+                                Label("Done", systemImage: "briefcase")
+                            }.tint(.teal)
+                        }
                     }
-                }
-            }
-            #if os(iOS)
-            .navigationBarTitle("TimeSlicer", displayMode: .large)
-            #elseif os(OSX)
-            .navigationTitle("TimeSlicer")
-            #endif
-                
-        }.sheet(isPresented: $isPresentingSheet, onDismiss: {
-            UserDefaults.standard.set(true, forKey: "onboarded")
-            print("just set", UserDefaults.standard.bool(forKey: "onboarded"))
-        }) {
-            CalendarPermissions(isPresentingSheet: $isPresentingSheet)
-        }.sheet(isPresented: $isPresentingAddTask) {
-            TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
-                .environment(\.managedObjectContext, viewContext)
-                .padding(.vertical, 20)
-        }.toast(isPresenting: $showToast, duration: 4){
-            
-            // `.alert` is the default displayMode
-            AlertToast(type: .complete(.teal), title: "Calendar Organized!")
-            
-        }.toast(isPresenting: $showErrorToast, duration: 4) {
-            AlertToast(displayMode: .hud, type: .error(.red), title: "Error Creating Calendar", subTitle: "Please click on the help icon for more details")
-        }
-        .overlay(
-                    GeometryReader { geometry in
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                Button(action: {
-                                    let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
-                                    
-                                    var timeInterval = 60
-                                    if aggressive {
-                                        timeInterval = 10
-                                    }
-                                    
-                                    let calendar = Calendar.current
-                                    let components = calendar.dateComponents([.year, .month, .day], from: Date())
-                                    
-                                    let start_date = calendar.date(from: components)!
-                                    let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
-                                    
-                                    let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
-                                    var cnt = 0
-                                    var avail = 0
-                                    for box in myTimeboxes {
-                                        if box.isAvailable {
-                                            avail += 1
-                                        }
-                                        cnt += 1
-                                    }
-                                    let myTasks = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
-                                    if myTasks.count < items.count {
-                                        showErrorToast = true
-                                    } else {
-                                        showToast = true
-                                    }
-                                    
-                                }) {
-                                    #if os(iOS)
-                                    Image(systemName: "clock.arrow.2.circlepath")
-                                        .resizable()
-                                        .frame(width: 16, height: 16)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
-                                    #elseif os(macOS)
-                                    Text("Schedule Calendar")
-                                    #endif
-                                }
-                                .padding(.trailing, 16)
-                                .padding(.bottom, geometry.safeAreaInsets.bottom)
+                    .onDelete(perform: deleteItems)
+                }.searchable(text: $searchText)
+                    .toolbar {
+                        ToolbarItem {
+#if os(iOS)
+                            NavigationLink(destination: HelpView()) {
+                                Label("Help", systemImage: "questionmark.circle")
+                            }
+#elseif os(macOS)
+                            Button(action: {
+                                let windowController = HelpWindowController()
+                                windowController.showWindow(nil)
+                            }) {
+                                Label("Help", systemImage: "questionmark.circle")
+                            }
+#endif
+                        }
+#if os(iOS)
+                        ToolbarItem {
+                            NavigationLink(destination: SettingsView()) {
+                                Label("Settings", systemImage: "gear")
+                            }
+                        }
+#endif
+                        ToolbarItem {
+                            Button(action: {isPresentingAddTask=true}){//addItem) {
+                                Label("Add Item", systemImage: "plus")
                             }
                         }
                     }
-        )
+#if os(iOS)
+                    .navigationBarTitle("TimeSlicer", displayMode: .large)
+#elseif os(OSX)
+                    .navigationTitle("TimeSlicer")
+#endif
+                
+            }.sheet(isPresented: $isPresentingSheet, onDismiss: {
+                UserDefaults.standard.set(true, forKey: "onboarded")
+                print("just set", UserDefaults.standard.bool(forKey: "onboarded"))
+            }) {
+                CalendarPermissions(isPresentingSheet: $isPresentingSheet)
+            }.sheet(isPresented: $isPresentingAddTask) {
+                TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
+                    .environment(\.managedObjectContext, viewContext)
+                    .padding(.vertical, 20)
+            }.toast(isPresenting: $showToast, duration: 4){
+                
+                // `.alert` is the default displayMode
+                AlertToast(type: .complete(.teal), title: "Calendar Organized!")
+                
+            }.toast(isPresenting: $showErrorToast, duration: 4) {
+                AlertToast(displayMode: .hud, type: .error(.red), title: "Error Creating Calendar", subTitle: "Please click on the help icon for more details")
+            }
+            FloatingButton(action: {
+                let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+                
+                var timeInterval = 60
+                if aggressive {
+                    timeInterval = 10
+                }
+                
+                let calendar = Calendar.current
+                let components = calendar.dateComponents([.year, .month, .day], from: Date())
+                
+                let start_date = calendar.date(from: components)!
+                let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
+                
+                let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
+                var cnt = 0
+                var avail = 0
+                for box in myTimeboxes {
+                    if box.isAvailable {
+                        avail += 1
+                    }
+                    cnt += 1
+                }
+                let myTasks = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
+                if myTasks.count < items.count {
+                    showErrorToast = true
+                } else {
+                    showToast = true
+                }
+                            }, icon: "hourglass.badge.plus")
+        }
+        
     }
     
     private func commit() {
@@ -278,5 +253,35 @@ struct ItemDetail : View {
             
         }
         .navigationTitle(item.title!)
+    }
+}
+
+
+struct FloatingButton: View {
+    let action: () -> Void
+    let icon: String
+    var body: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Button(action: action) {
+                    #if os(iOS)
+                    Image(systemName: icon)
+                        .font(.system(size: 25))
+                        .foregroundColor(.white)
+                        .frame(width: 60, height: 60)
+                        .background(.teal)
+                        .cornerRadius(30)
+                    #elseif os(macOS)
+                    Text("Schedule Calendar")
+                    #endif
+                }
+                
+                .shadow(radius: 10)
+                .offset(x: -25, y: -30)
+                
+            }
+        }
     }
 }
