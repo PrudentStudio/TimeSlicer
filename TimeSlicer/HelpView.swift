@@ -38,24 +38,29 @@ struct HelpView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack {
+                VStack(alignment: .leading) {
+                    Text("Organizing your Calendar")
+                        .font(.title)
+                    Text("Click the Schedule Calendar on the bottom right of the screen.")
                     Text("Unable to create a calendar")
-                    Text("If the app is telling you that it is unable to create the calendar, you are most likely using a Google Calendar account. You will manually have to create a calendar titled \"TimeSlicer\".")
-                    Text("Another possible reason is that you did not grant the neceassry permissions. TimeSlicer requires permission for the Calendar to be able to work properly.")
-                        .lineLimit(nil)
-                        .fixedSize(horizontal: false, vertical: true)
+                        .font(.title)
+                    Text("If the app is telling you that it is unable to create the calendar, you are most likely using a Google Calendar account. You will manually have to create a calendar titled \"TimeSlicer\".\n")
                     if (checkCalendarAuthorizationStatus()) {
-                        Text("You have already granted these permissions")
+                        Text("TimeSlicer requires permission for the Calendar to be able to work properly, but you have already granted these permissions")
                     } else {
                         Button(action: {
                             requestCalendarPermission()
                         }) {
-                            Text("Grant Calendar Permission")
+                            Text("TimeSlicer requires permission for the Calendar to be able to work properly. Grant Calendar Permission")
                         }
                     }
+                    
                 }
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding()
             }
+            .navigationTitle("Help!")
         }
     }
     

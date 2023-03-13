@@ -268,6 +268,7 @@ struct FloatingButton: View {
                 Button(action: action) {
                     #if os(iOS)
                     Image(systemName: icon)
+                        .accessibilityLabel(Text("Schedule Calendar"))
                         .font(.system(size: 25))
                         .foregroundColor(.white)
                         .frame(width: 60, height: 60)
