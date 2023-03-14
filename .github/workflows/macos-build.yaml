@@ -91,6 +91,9 @@ jobs:
           echo "Attach staple"
           xcrun stapler staple "$PWD/build/TimeSlicer.app"
 
+      - name: "Zip app"
+        run: |
+          zip -r TimeSlicer.zip build/TimeSlicer.app
 
       - name: "Build & test"
         run: |
@@ -101,4 +104,4 @@ jobs:
           prerelease: false
           files: |
             LICENSE
-            build/TimeSlicer.app
+            TimeSlicer.zip
