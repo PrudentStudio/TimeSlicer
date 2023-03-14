@@ -75,25 +75,26 @@ struct EKCalendarPickerView: View {
                     }
                 }
             }
+            .frame(minWidth: 400, minHeight: 400)
             .onAppear(perform: fetchCalendars)
             .onDisappear(perform: {
                 let calendarIDs = viewModel.calendarDict.values.flatMap { calendar in
                     calendar.filter { $0.shouldSync}.map { $0.calendarIdentifier }
                 }
                 print(calendarIDs)
-//                print("whoops")
-//                var toSave: [String] = []
-//                for source in viewModel.calendarDict.keys.sorted() {
-//                    for myCal in viewModel.calendarDict[source]! {
-//                        if myCal.shouldSync {
-//                            toSave.append(myCal.calendarIdentifier)
-//                        }
-//                    }
-//                }
-//                UserDefaults.standard.set(toSave, forKey: "selectedCals")
-//                UserDefaults.standard.synchronize()
             })
-            
+            .navigationTitle("Calendar Picker")
+            .toolbar {
+                ToolbarItem(placement: .automatic) {
+                        Button("Done") {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                        .keyboardShortcut(.cancelAction)
+                        .padding(.trailing, 20)
+                        .help("Dismiss Calendar Picker")
+                        .accessibility(label: Text("Done"))
+                    }
+            }
         }
         
     }

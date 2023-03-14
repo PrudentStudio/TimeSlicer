@@ -39,6 +39,16 @@ struct HelpView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading) {
+                    Text("Setting up Calendars and Permissions")
+                        .font(.title)
+                    #if os(iOS)
+                    Text("Click on the Settings icon and customise the following options:")
+                    #elseif os(macOS)
+                    Text("Open the app preferences by using CMD+, and customise the following options:")
+                    #endif
+                    Text("1. Pick Calendars to Sync With - The calendars you choose to sync from are used to block timeslots when the app will not organise any events.")
+                    Text("2. Primary Calendar Account to Write to - The primary account source you choose will have a new Calendar be created called \"TimeSlicer\", this is where the app writes the events to.")
+                    Text("3. Working Hours - This is used to enforce blackout times, tasks will not be scheduled outside this time range.")
                     Text("Organizing your Calendar")
                         .font(.title)
                     Text("Click the Schedule Calendar on the bottom right of the screen.")

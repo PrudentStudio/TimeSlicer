@@ -13,11 +13,7 @@ import AlertToast
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    #if os(iOS)
     @State private var isPresentingSheet = !(UserDefaults.standard.bool(forKey: "onboarded"))
-    #elseif os(macOS)
-    @State private var isPresentingSheet = false
-    #endif
     @State private var isPresentingAddTask = false
     
     @State private var searchText = ""
