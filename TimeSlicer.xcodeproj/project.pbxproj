@@ -31,6 +31,7 @@
 		3E7C357329BB0E0700C311EF /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
 		3E9B850A29C0415D008E5202 /* ExportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ExportOptions.plist; sourceTree = "<group>"; };
 		3E9B850C29C05860008E5202 /* myentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = myentitlements.plist; sourceTree = "<group>"; };
+		3E9B850E29C12B20008E5202 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3EA081AC29B455F600D8C372 /* Timeboxing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeboxing.swift; sourceTree = "<group>"; };
 		3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicerApp.swift; sourceTree = "<group>"; };
@@ -78,6 +79,7 @@
 		3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */ = {
 			isa = PBXGroup;
 			children = (
+				3E9B850E29C12B20008E5202 /* Info.plist */,
 				3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */,
 				3E165C7329B96817001065CB /* HelpView.swift */,
 				3EA081AC29B455F600D8C372 /* Timeboxing.swift */,
@@ -325,7 +327,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeSlicer/TimeSlicer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeSlicer/Preview Content\"";
@@ -333,8 +335,10 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeSlicer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TimeSlicer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Access Schedule";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -368,7 +372,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeSlicer/TimeSlicer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeSlicer/Preview Content\"";
@@ -376,8 +380,10 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TimeSlicer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = TimeSlicer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSCalendarsUsageDescription = "Access Schedule";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

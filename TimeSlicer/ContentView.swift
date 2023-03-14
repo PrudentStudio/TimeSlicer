@@ -22,7 +22,7 @@ struct ContentView: View {
     @State private var showToast = false
     @State private var showErrorToast = false
     
-        @FetchRequest(
+    @FetchRequest(
             sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
             predicate: NSPredicate(format: "done == nil OR done == false"),
             animation: .default)
@@ -69,7 +69,16 @@ struct ContentView: View {
                         }
                     }
                     .onDelete(perform: deleteItems)
-                }.searchable(text: $searchText)
+                }.refreshable(action: {
+                    do {
+                            try viewContext.save() // Save any pending changes to the data store
+                            viewContext.refreshAllObjects() // Reload data from the data store
+                        } catch let error as NSError {
+                            print("Could not update data. \(error), \(error.userInfo)")
+                        }
+                })
+                
+                .searchable(text: $searchText)
                     .toolbar {
                         ToolbarItem {
 #if os(iOS)

@@ -14,8 +14,14 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
         for _ in 0..<10 {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
+            let newTask = Tasks(context: viewContext)
+            newTask.timestamp = Date()
+            newTask.title = "Sample Task"
+            newTask.desc = "Sample Description"
+            newTask.done = false
+            newTask.priority = 1
+            newTask.duedate = Date()
+            newTask.duration = 10
         }
         do {
             try viewContext.save()
@@ -32,6 +38,7 @@ struct PersistenceController {
 
     init(inMemory: Bool = false) {
         container = NSPersistentCloudKitContainer(name: "TimeSlicer")
+        
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
@@ -51,6 +58,7 @@ struct PersistenceController {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
+        container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
         container.viewContext.automaticallyMergesChangesFromParent = true
     }
 }
