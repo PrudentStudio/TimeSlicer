@@ -1,14 +1,15 @@
-name: Build and Notarize macOS App
+name: "tagged-release"
 
 on:
   push:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@latest
       
 
       - name: Install Apple Certificate
@@ -85,8 +86,13 @@ jobs:
           xcrun stapler staple "$PWD/build/TimeSlicer.app"
 
 
-      - name: "Upload artifact"
-        uses: actions/upload-artifact@v3
+      - name: "Build & test"
+        run: |
+          echo "done!"
+      - uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: TimeSlicer
-          path: build/TimeSlicer.app
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          files: |
+            LICENSE
+            build/TimeSlicer.app
