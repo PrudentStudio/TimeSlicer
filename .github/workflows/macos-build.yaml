@@ -10,19 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      # Install Xcode CLI tools
-      - name: Install Xcode CLI tools
-        run: xcode-select --install || true
 
-      # Build and archive the app
-      - name: Build and archive app
-        run: xcodebuild -project TimeSlicer.xcodeproj -scheme TimeSlicer -destination 'generic/platform=macOS' -archivePath $PWD/build/TimeSlicer.xcarchive archive
-
-      # Export the app
-      - name: Export app
-        run: xcodebuild -exportArchive -archivePath $PWD/build/TimeSlicer.xcarchive -exportPath $PWD/build -exportOptionsPlist ExportOptions.plist
-
-      - name: Codesign app bundle
+      - name: Install Apple Certificate
         # Extract the secrets we defined earlier as environment variables
         env: 
           MACOS_CERTIFICATE: ${{ secrets.PROD_MACOS_CERTIFICATE }}
@@ -44,8 +33,22 @@ jobs:
           security import certificate.p12 -k build.keychain -P "$MACOS_CERTIFICATE_PWD" -T /usr/bin/codesign
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$MACOS_CI_KEYCHAIN_PWD" build.keychain
 
-          # We finally codesign our app bundle, specifying the Hardened runtime option
-          
+      # Build and archive the app
+      - name: Build and archive app
+        run: xcodebuild -project TimeSlicer.xcodeproj -scheme TimeSlicer -destination 'generic/platform=macOS' -archivePath $PWD/build/TimeSlicer.xcarchive archive
+
+      # Export the app
+      - name: Export app
+        run: xcodebuild -exportArchive -archivePath $PWD/build/TimeSlicer.xcarchive -exportPath $PWD/build -exportOptionsPlist ExportOptions.plist
+
+      - name: Codesign app bundle
+        # Extract the secrets we defined earlier as environment variables
+        env: 
+          MACOS_CERTIFICATE: ${{ secrets.PROD_MACOS_CERTIFICATE }}
+          MACOS_CERTIFICATE_PWD: ${{ secrets.PROD_MACOS_CERTIFICATE_PWD }}
+          MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
+          MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
+        run: |
           /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime $PWD/build/TimeSlicer.app -v
 
       - name: "Notarize app bundle"
