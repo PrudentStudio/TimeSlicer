@@ -48,7 +48,7 @@ jobs:
       - name: Export app
         run: xcodebuild -exportArchive -archivePath $PWD/build/TimeSlicer.xcarchive -exportPath $PWD/build -exportOptionsPlist ExportOptions.plist
 
-      - name: Codesign app bundle
+      - name: Codesign app bundle with entitlements
         # Extract the secrets we defined earlier as environment variables
         env: 
           MACOS_CERTIFICATE: ${{ secrets.PROD_MACOS_CERTIFICATE }}
@@ -56,7 +56,7 @@ jobs:
           MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
           MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
         run: |
-          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime $PWD/build/TimeSlicer.app -v
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime  --entitlements myentitlements.plist $PWD/build/TimeSlicer.app -v
 
       - name: "Notarize app bundle"
         # Extract the secrets we defined earlier as environment variables
@@ -93,7 +93,8 @@ jobs:
 
       - name: "Zip app"
         run: |
-          zip -r TimeSlicer.zip build/TimeSlicer.app
+          mv build/TimeSlicer.app TimeSlicer.app
+          zip -r TimeSlicer.zip TimeSlicer.app
 
       - name: "Build & test"
         run: |

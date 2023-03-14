@@ -11,6 +11,7 @@
 		3E55B12229BBCCE100282EB3 /* EKCalendarPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */; };
 		3E7C357429BB0E0700C311EF /* MacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7C357329BB0E0700C311EF /* MacSettingsView.swift */; };
 		3E9B850B29C0415D008E5202 /* ExportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E9B850A29C0415D008E5202 /* ExportOptions.plist */; };
+		3E9B850D29C05860008E5202 /* myentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E9B850C29C05860008E5202 /* myentitlements.plist */; };
 		3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA081AC29B455F600D8C372 /* Timeboxing.swift */; };
 		3EA081B029B50D5C00D8C372 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 3EA081AF29B50D5C00D8C372 /* AlertToast */; };
 		3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */; };
@@ -29,6 +30,7 @@
 		3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EKCalendarPickerView.swift; sourceTree = "<group>"; };
 		3E7C357329BB0E0700C311EF /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
 		3E9B850A29C0415D008E5202 /* ExportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ExportOptions.plist; sourceTree = "<group>"; };
+		3E9B850C29C05860008E5202 /* myentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = myentitlements.plist; sourceTree = "<group>"; };
 		3EA081AC29B455F600D8C372 /* Timeboxing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeboxing.swift; sourceTree = "<group>"; };
 		3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicerApp.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 		3EBCC7D729B3D85800AEA9F3 = {
 			isa = PBXGroup;
 			children = (
+				3E9B850C29C05860008E5202 /* myentitlements.plist */,
 				3E9B850A29C0415D008E5202 /* ExportOptions.plist */,
 				3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */,
 				3EBCC7E129B3D85800AEA9F3 /* Products */,
@@ -165,6 +168,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E9B850D29C05860008E5202 /* myentitlements.plist in Resources */,
 				3EBCC7F129B3D85C00AEA9F3 /* Preview Assets.xcassets in Resources */,
 				3EBCC7ED29B3D85C00AEA9F3 /* Assets.xcassets in Resources */,
 				3E9B850B29C0415D008E5202 /* ExportOptions.plist in Resources */,
@@ -320,8 +324,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeSlicer/TimeSlicer.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeSlicer/Preview Content\"";
 				DEVELOPMENT_TEAM = 6BS49F3GLW;
@@ -362,8 +366,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeSlicer/TimeSlicer.entitlements;
-				CODE_SIGN_IDENTITY = "-";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeSlicer/Preview Content\"";
 				DEVELOPMENT_TEAM = 6BS49F3GLW;
