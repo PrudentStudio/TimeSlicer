@@ -56,7 +56,7 @@ jobs:
           MACOS_CERTIFICATE_NAME: ${{ secrets.PROD_MACOS_CERTIFICATE_NAME }}
           MACOS_CI_KEYCHAIN_PWD: ${{ secrets.PROD_MACOS_CI_KEYCHAIN_PWD }}
         run: |
-          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime  --entitlements myentitlements.plist $PWD/build/TimeSlicer.app -v
+          /usr/bin/codesign --force -s "$MACOS_CERTIFICATE_NAME" --options runtime  --entitlements TimeSlicer/TimeSlicer.entitlements $PWD/build/TimeSlicer.app -v
 
       - name: "Notarize app bundle"
         # Extract the secrets we defined earlier as environment variables
