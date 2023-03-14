@@ -243,6 +243,30 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
     return scheduledTimeboxes
 }
 
+func createAndInitTimeboxes() -> [Timebox] {
+    let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+    
+    var timeInterval = 60
+    if aggressive {
+        timeInterval = 10
+    }
+    
+    let start_date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: Date()))!
+    let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
+    
+    let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
+    var cnt = 0
+    var avail = 0
+    for box in myTimeboxes {
+        if box.isAvailable {
+            avail += 1
+        }
+        cnt += 1
+    }
+    
+    return myTimeboxes
+}
+
 
 /*
 func getWritableCalendar() -> EKCalendar {

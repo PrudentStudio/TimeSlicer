@@ -61,7 +61,7 @@ struct SettingsView: View {
                     Button("Force Delete App Calendar", role: .destructive) {
                         cleanCalendar()
                     }
-                    Button("Reset OnBoarding Screen", role: .destructive) {
+                    Button("Reset Onboarding Screen", role: .destructive) {
                         UserDefaults.standard.set(false, forKey: "onboarded")
                         print(!(UserDefaults.standard.bool(forKey: "onboarded")))
                         print((UserDefaults.standard.bool(forKey: "onboarded")))

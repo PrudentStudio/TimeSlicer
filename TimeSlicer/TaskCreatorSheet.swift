@@ -19,23 +19,27 @@ struct TaskCreatorSheet: View {
         
     var body: some View {
         NavigationStack {
-            Form {
-                Section(header: Text("Task Details")) {
+            HStack {
+                #if os(macOS)
+                Spacer()
+                #endif
+                Form {
+                    Section(header: Text("Task Details")) {
                         TextField("Task Title", text: $title)
-                    DatePicker("Due Date", selection: $dueDate, displayedComponents: [.date, .hourAndMinute])
-                    Text("Priority (1-4)")
-                    Slider(
-                        value: $priority,
-                        in: 1...4,
-                        step: 1) {
-                            Text("Priority (1-4)")
-                        } minimumValueLabel: {
-                            Text("1")
-                        } maximumValueLabel: {
-                            Text("4")
-                        }
+                        DatePicker("Due Date", selection: $dueDate, displayedComponents: [.date, .hourAndMinute])
+                        Text("Priority (1-4)")
+                        Slider(
+                            value: $priority,
+                            in: 1...4,
+                            step: 1) {
+                                Text("Priority (1-4)")
+                            } minimumValueLabel: {
+                                Text("1")
+                            } maximumValueLabel: {
+                                Text("4")
+                            }
                         
-                    Stepper(value: $duration, in: 10...120, step: 10, label: {
+                        Stepper(value: $duration, in: 10...120, step: 10, label: {
                             Text("Task Duration: \(duration) minute\(duration == 10 ? "" : "s")")
                         })
                         Text("Task Description:")
@@ -56,7 +60,7 @@ struct TaskCreatorSheet: View {
                                 newItem.duedate = dueDate
                                 newItem.duration = Int16(duration)
                                 newItem.priority = Int16(priority)
-
+                                
                                 do {
                                     try viewContext.save()
                                 } catch {
@@ -71,17 +75,24 @@ struct TaskCreatorSheet: View {
                         }
                     }
                     ToolbarItem(placement: .automatic) {
-                            Button("Cancel") {
-                                isPresentingAddTask = false
-                            }
-                            .keyboardShortcut(.cancelAction)
-                            .foregroundColor(.red) // Set the foreground color to red to indicate it's destructive
-                            .padding(.trailing, 20)
-                            .help("Discard changes")
-                            .accessibility(label: Text("Cancel"))
+                        Button("Cancel") {
+                            isPresentingAddTask = false
                         }
+                        .keyboardShortcut(.cancelAction)
+                        .foregroundColor(.red) // Set the foreground color to red to indicate it's destructive
+                        .padding(.trailing, 20)
+                        .help("Discard changes")
+                        .accessibility(label: Text("Cancel"))
+                    }
                 }
+                #if os(macOS)
+                Spacer()
+                #endif
+                
             }
+            
+        }
+        
         }
 }
 

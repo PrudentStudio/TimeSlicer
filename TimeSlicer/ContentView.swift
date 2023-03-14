@@ -22,11 +22,11 @@ struct ContentView: View {
     @State private var showToast = false
     @State private var showErrorToast = false
     
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
-        predicate: NSPredicate(format: "done == nil OR done == false"),
-        animation: .default)
-    private var items: FetchedResults<Tasks>
+        @FetchRequest(
+            sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
+            predicate: NSPredicate(format: "done == nil OR done == false"),
+            animation: .default)
+        private var items: FetchedResults<Tasks>
     
     var searchResults: [Tasks] {
         if searchText.isEmpty {
@@ -93,9 +93,10 @@ struct ContentView: View {
                         }
 #endif
                         ToolbarItem {
-                            Button(action: {isPresentingAddTask=true}){//addItem) {
+                            Button(action: {isPresentingAddTask=true}){
                                 Label("Add Item", systemImage: "plus")
-                            }
+                            }.keyboardShortcut("n")
+
                         }
                     }
 #if os(iOS)
@@ -128,22 +129,7 @@ struct ContentView: View {
                 if aggressive {
                     timeInterval = 10
                 }
-                
-                let calendar = Calendar.current
-                let components = calendar.dateComponents([.year, .month, .day], from: Date())
-                
-                let start_date = calendar.date(from: components)!
-                let end_date = start_date.addingTimeInterval(7*24*60*60) // 7 days = 7*24*60*60
-                
-                let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
-                var cnt = 0
-                var avail = 0
-                for box in myTimeboxes {
-                    if box.isAvailable {
-                        avail += 1
-                    }
-                    cnt += 1
-                }
+                let myTimeboxes = createAndInitTimeboxes()
                 let myTasks = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
                 if myTasks.count < items.count {
                     showErrorToast = true

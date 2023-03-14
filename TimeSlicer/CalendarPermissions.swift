@@ -36,7 +36,7 @@ struct CalendarPermissions: View {
                         }
                     }
                     Section(header: Text("Step 1 - Primary Calendar Source")) {
-                        Text("Which Calendar source do you want us to write the tasks to? If you choose a Google Calendar, you will have to first manually go and create a calendar titled \"TimeSlicer\".")
+                        Text("Which Calendar source do you want us to write the tasks to? If you choose a Google Calendar, you will have to first manually go and create a calendar titled \"TimeSlicer\". If you cannot see any sources here, after reading through these instructions, go to the preferences section.")
                             //.fixedSize(horizontal: false, vertical: true)
                             
                         Picker("Primary Calendar", selection: $selectedSource) {
@@ -52,9 +52,14 @@ struct CalendarPermissions: View {
                     Section(header: Text("Step 2 - Configure ze App")) {
                         Text("Don't forget to go to the settings section and fine-tune the app")
                     }
+                    Section(header: Text("Step 3 - Add Tasks")) {
+                        Text("Add tasks and tap the schedule calendar button")
+                    }
                     
                     .lineLimit(nil)
+                    #if os(macOS)
                     .frame(minWidth: 200, minHeight: 50)
+                    #endif
                     
                 }
                 .navigationTitle("Onboarding")
