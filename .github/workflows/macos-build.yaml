@@ -83,3 +83,10 @@ jobs:
           # validated by macOS even when an internet connection is not available.
           echo "Attach staple"
           xcrun stapler staple "$PWD/build/TimeSlicer.app"
+
+
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v3
+        with:
+          name: TimeSlicer
+          path: build/TimeSlicer.app
