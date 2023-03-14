@@ -97,9 +97,3 @@ jobs:
           files: |
             LICENSE
             build/TimeSlicer.app
-
-      - name: "Upload Artefact"
-        uses: "actions/upload-artifact@v2"
-        with:
-          name: "TimeSlicer.app"
-          path: "build/TimeSlicer.app
