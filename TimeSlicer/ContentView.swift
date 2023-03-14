@@ -95,7 +95,7 @@ struct ContentView: View {
                         ToolbarItem {
                             Button(action: {isPresentingAddTask=true}){
                                 Label("Add Item", systemImage: "plus")
-                            }.keyboardShortcut("n")
+                            }
 
                         }
                     }
