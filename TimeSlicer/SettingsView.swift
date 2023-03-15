@@ -12,9 +12,9 @@ import EventKitUI
 #endif
 
 struct SettingsView: View {
-    @State public var dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
-    @State public var dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
-    @State public var aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
+    @State public var dayStart = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
+    @State public var dayEnd = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
+    @State public var aggressive = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
     let eventStore = EKEventStore()
     @State public var selectedSource: EKSource?
     @State private var allSources: [EKSource] = []
@@ -43,7 +43,7 @@ struct SettingsView: View {
                         }
                         
                     }.onChange(of: selectedSource) { _ in
-                        UserDefaults.standard.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
+                        UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
                     }
 
                    
@@ -62,9 +62,9 @@ struct SettingsView: View {
                         cleanCalendar()
                     }
                     Button("Reset Onboarding Screen", role: .destructive) {
-                        UserDefaults.standard.set(false, forKey: "onboarded")
-                        print(!(UserDefaults.standard.bool(forKey: "onboarded")))
-                        print((UserDefaults.standard.bool(forKey: "onboarded")))
+                        UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(false, forKey: "onboarded")
+                        print(!(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded")))
+                        print((UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded")))
                     }
                 }
                 
@@ -77,15 +77,15 @@ struct SettingsView: View {
         
         .onDisappear(){
             print("Closing and saving")
-            UserDefaults.standard.set(aggressive, forKey: "Aggressive")
-            UserDefaults.standard.set(dayStart, forKey: "DayStart")
-            UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
+            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(aggressive, forKey: "Aggressive")
+            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(dayStart, forKey: "DayStart")
+            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(dayEnd, forKey: "DayEnd")
         }
         .onAppear(){
             fetchSources()
-            aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
-            dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
-            dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
+            aggressive = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
+            dayStart = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
+            dayEnd = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
         }
     }
 
@@ -93,7 +93,7 @@ struct SettingsView: View {
         let eventStore = EKEventStore()
         let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
         
-        let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+        let calIdentifier: String = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.string(forKey: "primarySource") ?? ""
         
         if (calIdentifier == "" ) {
             DispatchQueue.main.async {
@@ -131,13 +131,13 @@ struct CalendarChooserView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> EKCalendarChooser {
         let chooser = EKCalendarChooser(selectionStyle: .multiple, displayStyle: .allCalendars, entityType: .event, eventStore: EKEventStore())
         
-        chooser.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])!
+        chooser.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.stringArray(forKey: "selectedCals") ?? [])!
         chooser.delegate = context.coordinator
         return chooser
     }
     
     func updateUIViewController(_ uiViewController: EKCalendarChooser, context: Context) {
-        uiViewController.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])!
+        uiViewController.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.stringArray(forKey: "selectedCals") ?? [])!
     }
     
     func makeCoordinator() -> Coordinator {
@@ -158,7 +158,7 @@ struct CalendarChooserView: UIViewControllerRepresentable {
                     entityType: .event,
                     eventStore: eventStore
                 )
-                self.calendarChooser.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.standard.stringArray(forKey: "selectedCals") ?? [])!
+                self.calendarChooser.selectedCalendars = getCalendarsByIdentifiers(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.stringArray(forKey: "selectedCals") ?? [])!
                 self.calendarChooser.showsDoneButton = true
                 self.calendarChooser.showsCancelButton = true
                 super.init()
@@ -172,22 +172,9 @@ struct CalendarChooserView: UIViewControllerRepresentable {
             for cal in calendarChooser.selectedCalendars {
                 myCalendarStrings.append(cal.calendarIdentifier)
             }
-            UserDefaults.standard.set(myCalendarStrings, forKey: "selectedCals")
+            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(myCalendarStrings, forKey: "selectedCals")
         }
     }
 }
 #endif
 
-func getCalendarsByIdentifiers(_ identifiers: [String]) -> Set<EKCalendar>? {
-    let eventStore = EKEventStore()
-    let calendars = eventStore.calendars(for: .event)
-    var result: [EKCalendar] = []
-    
-    for calendar in calendars {
-        if identifiers.contains(calendar.calendarIdentifier) {
-            result.append(calendar)
-        }
-    }
-    
-    return result.isEmpty ? [] : Set(result)
-}
