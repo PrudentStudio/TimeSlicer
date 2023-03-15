@@ -46,7 +46,7 @@ struct CalendarPermissions: View {
                             }
                             
                         }.onChange(of: selectedSource) { _ in
-                            UserDefaults.standard.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
+                            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
                         }
                     }
                     Section(header: Text("Step 2 - Configure ze App")) {
@@ -67,7 +67,7 @@ struct CalendarPermissions: View {
                     ToolbarItem(placement: .automatic) {
                             Button("Done") {
                                 isPresentingSheet = false
-                                UserDefaults.standard.set(true, forKey: "onboarded")
+                                UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(true, forKey: "onboarded")
                             }
                             .keyboardShortcut(.cancelAction)
                             .padding(.trailing, 20)
@@ -89,7 +89,7 @@ struct CalendarPermissions: View {
         let eventStore = EKEventStore()
         let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
         
-        let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+        let calIdentifier: String = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.string(forKey: "primarySource") ?? ""
         print(sources)
         if (calIdentifier == "" ) {
             DispatchQueue.main.async {

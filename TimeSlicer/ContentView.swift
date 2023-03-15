@@ -13,7 +13,7 @@ import AlertToast
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
     
-    @State private var isPresentingSheet = !(UserDefaults.standard.bool(forKey: "onboarded"))
+    @State private var isPresentingSheet = !(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded"))
     @State private var isPresentingAddTask = false
     
     @State private var searchText = ""
@@ -79,6 +79,21 @@ struct ContentView: View {
                 })
                 
                 .searchable(text: $searchText)
+                .onContinueUserActivity("ScheduleTasksIntent", perform: {_ in
+                    let aggressive: Bool = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
+                    
+                    var timeInterval = 60
+                    if aggressive {
+                        timeInterval = 10
+                    }
+                    let myTimeboxes = createAndInitTimeboxes()
+                    let myTasks = scheduleTasks(tasks: Array(items), timeboxes: myTimeboxes, time_interval: timeInterval)
+                    if myTasks.count < items.count {
+                        showErrorToast = true
+                    } else {
+                        showToast = true
+                    }
+                })
                     .toolbar {
                         ToolbarItem {
 #if os(iOS)
@@ -115,8 +130,8 @@ struct ContentView: View {
 #endif
                 
             }.sheet(isPresented: $isPresentingSheet, onDismiss: {
-                UserDefaults.standard.set(true, forKey: "onboarded")
-                print("just set", UserDefaults.standard.bool(forKey: "onboarded"))
+                UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(true, forKey: "onboarded")
+                print("just set", UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded"))
             }) {
                 CalendarPermissions(isPresentingSheet: $isPresentingSheet)
             }.sheet(isPresented: $isPresentingAddTask) {
@@ -132,7 +147,7 @@ struct ContentView: View {
                 AlertToast(displayMode: .hud, type: .error(.red), title: "Error Creating Calendar", subTitle: "Please click on the help icon for more details")
             }
             FloatingButton(action: {
-                let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+                let aggressive: Bool = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
                 
                 var timeInterval = 60
                 if aggressive {

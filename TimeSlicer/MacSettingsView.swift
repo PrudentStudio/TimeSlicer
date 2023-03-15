@@ -35,9 +35,9 @@ struct CalendarSettingsView: View {
     @State public var selectedSource: EKSource?
     @State private var allSources: [EKSource] = []
     @State private var allCalendars: [EKCalendar] = []
-    @State public var dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
-    @State public var dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
-    @State public var aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
+    @State public var dayStart = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
+    @State public var dayEnd = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
+    @State public var aggressive = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
     
     @State private var isShowingCalendarPicker = false
     
@@ -53,7 +53,7 @@ struct CalendarSettingsView: View {
                         }
                         
                     }.onChange(of: selectedSource) { _ in
-                        UserDefaults.standard.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
+                        UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
                     }
                     Button("Pick Calendars to Sync With") {
                         isShowingCalendarPicker = true
@@ -75,17 +75,17 @@ struct CalendarSettingsView: View {
                 Section {
                     Button("Save Changes") {
                         print("Saving")
-                        UserDefaults.standard.set(aggressive, forKey: "Aggressive")
-                        UserDefaults.standard.set(dayStart, forKey: "DayStart")
-                        UserDefaults.standard.set(dayEnd, forKey: "DayEnd")
+                        UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(aggressive, forKey: "Aggressive")
+                        UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(dayStart, forKey: "DayStart")
+                        UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(dayEnd, forKey: "DayEnd")
                     }
                 }
             }
             .onAppear(){
                 fetchSources()
-                aggressive = UserDefaults.standard.bool(forKey: "Aggressive")
-                dayStart = UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
-                dayEnd = UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
+                aggressive = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
+                dayStart = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!
+                dayEnd = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!
                 print(dayStart)
             }
             
@@ -100,7 +100,7 @@ struct CalendarSettingsView: View {
         let eventStore = EKEventStore()
         let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
         
-        let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+        let calIdentifier: String = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.string(forKey: "primarySource") ?? ""
         
         if (calIdentifier == "" ) {
             DispatchQueue.main.async {
@@ -109,9 +109,7 @@ struct CalendarSettingsView: View {
             }
         } else {
             for source in sources {
-                if source.title == nil { // The picker does not display labels without this option
-                    continue
-                }
+                print(source)
                 if (source.sourceIdentifier.trimmingCharacters(in: .whitespaces) == calIdentifier.trimmingCharacters(in: .whitespaces)) {
                     DispatchQueue.main.async {
                         self.allSources = sources
@@ -134,9 +132,9 @@ struct DangerZoneView: View {
                     cleanCalendar()
                 }
                 Button("Reset Onboarding Screen", role: .destructive) {
-                    UserDefaults.standard.set(false, forKey: "onboarded")
-                    print(!(UserDefaults.standard.bool(forKey: "onboarded")))
-                    print((UserDefaults.standard.bool(forKey: "onboarded")))
+                    UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(false, forKey: "onboarded")
+                    print(!(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded")))
+                    print((UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded")))
                 }
             }
         }

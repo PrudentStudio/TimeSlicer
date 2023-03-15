@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>INEnums</key>
+	<array/>
+	<key>INIntentDefinitionModelVersion</key>
+	<string>1.2</string>
+	<key>INIntentDefinitionNamespace</key>
+	<string>DdXEMn</string>
+	<key>INIntentDefinitionSystemVersion</key>
+	<string>22C65</string>
+	<key>INIntentDefinitionToolsBuildVersion</key>
+	<string>14C18</string>
+	<key>INIntentDefinitionToolsVersion</key>
+	<string>14.2</string>
+	<key>INIntents</key>
+	<array>
+		<dict>
+			<key>INIntentCategory</key>
+			<string>generic</string>
+			<key>INIntentConfigurable</key>
+			<true/>
+			<key>INIntentDescription</key>
+			<string>Schedule tasks by adding them to your calendar</string>
+			<key>INIntentDescriptionID</key>
+			<string>DggLxd</string>
+			<key>INIntentEligibleForWidgets</key>
+			<true/>
+			<key>INIntentManagedParameterCombinations</key>
+			<dict>
+				<key></key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Schedule tasks by adding them to your calendar</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>ysHO8j</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+			</dict>
+			<key>INIntentName</key>
+			<string>ScheduleTasks</string>
+			<key>INIntentParameterCombinations</key>
+			<dict>
+				<key></key>
+				<dict>
+					<key>INIntentParameterCombinationIsPrimary</key>
+					<true/>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>Schedule tasks by adding them to your calendar</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>acH5gu</string>
+				</dict>
+			</dict>
+			<key>INIntentResponse</key>
+			<dict>
+				<key>INIntentResponseCodes</key>
+				<array>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Success!</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>w291HX</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>Your tasks have been added to the calendar successfully!</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>AUteoF</string>
+						<key>INIntentResponseCodeName</key>
+						<string>success</string>
+						<key>INIntentResponseCodeSuccess</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>INIntentResponseCodeConciseFormatString</key>
+						<string>Whoops! An error occurred, try continuing in the app itself</string>
+						<key>INIntentResponseCodeConciseFormatStringID</key>
+						<string>JvOD1Z</string>
+						<key>INIntentResponseCodeFormatString</key>
+						<string>An error occurred, try continuing in the app itself</string>
+						<key>INIntentResponseCodeFormatStringID</key>
+						<string>6uFQw8</string>
+						<key>INIntentResponseCodeName</key>
+						<string>failure</string>
+					</dict>
+				</array>
+				<key>INIntentResponseLastParameterTag</key>
+				<integer>2</integer>
+				<key>INIntentResponseOutput</key>
+				<string>result</string>
+				<key>INIntentResponseParameters</key>
+				<array>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>ScheduledSuccess</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>mRwOZZ</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>1</integer>
+						<key>INIntentResponseParameterMetadata</key>
+						<dict>
+							<key>INIntentResponseParameterMetadataFalseDisplayName</key>
+							<string>false</string>
+							<key>INIntentResponseParameterMetadataFalseDisplayNameID</key>
+							<string>dATT2d</string>
+							<key>INIntentResponseParameterMetadataTrueDisplayName</key>
+							<string>true</string>
+							<key>INIntentResponseParameterMetadataTrueDisplayNameID</key>
+							<string>cXinJA</string>
+						</dict>
+						<key>INIntentResponseParameterName</key>
+						<string>result</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>2</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>Boolean</string>
+					</dict>
+				</array>
+			</dict>
+			<key>INIntentTitle</key>
+			<string>Schedule Tasks</string>
+			<key>INIntentTitleID</key>
+			<string>gevirc</string>
+			<key>INIntentType</key>
+			<string>Custom</string>
+			<key>INIntentVerb</key>
+			<string>Run</string>
+		</dict>
+	</array>
+	<key>INTypes</key>
+	<array/>
+</dict>
+</plist>

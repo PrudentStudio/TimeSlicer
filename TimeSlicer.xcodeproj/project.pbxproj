@@ -11,7 +11,8 @@
 		3E55B12229BBCCE100282EB3 /* EKCalendarPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */; };
 		3E7C357429BB0E0700C311EF /* MacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E7C357329BB0E0700C311EF /* MacSettingsView.swift */; };
 		3E9B850B29C0415D008E5202 /* ExportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E9B850A29C0415D008E5202 /* ExportOptions.plist */; };
-		3E9B850D29C05860008E5202 /* myentitlements.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3E9B850C29C05860008E5202 /* myentitlements.plist */; };
+		3E9B851029C14EE6008E5202 /* Intents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 3E9B850F29C14EE5008E5202 /* Intents.intentdefinition */; };
+		3E9B857E29C15E49008E5202 /* CalendarFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9B857D29C15E49008E5202 /* CalendarFunctions.swift */; };
 		3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA081AC29B455F600D8C372 /* Timeboxing.swift */; };
 		3EA081B029B50D5C00D8C372 /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = 3EA081AF29B50D5C00D8C372 /* AlertToast */; };
 		3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */; };
@@ -25,13 +26,47 @@
 		3EBCC7FF29B4134D00AEA9F3 /* TaskCreatorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EBCC7FE29B4134D00AEA9F3 /* TaskCreatorSheet.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		3E9B853929C15A0F008E5202 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9B854B29C15AC9008E5202 /* Embed ExtensionKit Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(EXTENSIONS_FOLDER_PATH)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed ExtensionKit Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3E9B859629C160C8008E5202 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		3E165C7329B96817001065CB /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EKCalendarPickerView.swift; sourceTree = "<group>"; };
 		3E7C357329BB0E0700C311EF /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
 		3E9B850A29C0415D008E5202 /* ExportOptions.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ExportOptions.plist; sourceTree = "<group>"; };
-		3E9B850C29C05860008E5202 /* myentitlements.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = myentitlements.plist; sourceTree = "<group>"; };
 		3E9B850E29C12B20008E5202 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3E9B850F29C14EE5008E5202 /* Intents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = Intents.intentdefinition; sourceTree = "<group>"; };
+		3E9B857D29C15E49008E5202 /* CalendarFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarFunctions.swift; sourceTree = "<group>"; };
 		3EA081AC29B455F600D8C372 /* Timeboxing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Timeboxing.swift; sourceTree = "<group>"; };
 		3EBCC7E029B3D85800AEA9F3 /* TimeSlicer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeSlicer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeSlicerApp.swift; sourceTree = "<group>"; };
@@ -58,10 +93,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3E9B857429C15BFB008E5202 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */,
+				3E9B857D29C15E49008E5202 /* CalendarFunctions.swift */,
+				3EA081AC29B455F600D8C372 /* Timeboxing.swift */,
+				3EBCC7E729B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
 		3EBCC7D729B3D85800AEA9F3 = {
 			isa = PBXGroup;
 			children = (
-				3E9B850C29C05860008E5202 /* myentitlements.plist */,
+				3E9B857429C15BFB008E5202 /* Shared */,
 				3E9B850A29C0415D008E5202 /* ExportOptions.plist */,
 				3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */,
 				3EBCC7E129B3D85800AEA9F3 /* Products */,
@@ -79,21 +125,19 @@
 		3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */ = {
 			isa = PBXGroup;
 			children = (
+				3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */,
 				3E9B850E29C12B20008E5202 /* Info.plist */,
-				3E55B12129BBCCE100282EB3 /* EKCalendarPickerView.swift */,
 				3E165C7329B96817001065CB /* HelpView.swift */,
-				3EA081AC29B455F600D8C372 /* Timeboxing.swift */,
 				3EBCC7FC29B3F13000AEA9F3 /* SettingsView.swift */,
 				3EBCC7E329B3D85800AEA9F3 /* TimeSlicerApp.swift */,
-				3EBCC7E529B3D85800AEA9F3 /* Persistence.swift */,
 				3EBCC7EA29B3D85800AEA9F3 /* ContentView.swift */,
 				3EBCC7FE29B4134D00AEA9F3 /* TaskCreatorSheet.swift */,
 				3EBCC7EC29B3D85C00AEA9F3 /* Assets.xcassets */,
 				3EBCC7EE29B3D85C00AEA9F3 /* TimeSlicer.entitlements */,
-				3EBCC7E729B3D85800AEA9F3 /* TimeSlicer.xcdatamodeld */,
 				3EBCC7EF29B3D85C00AEA9F3 /* Preview Content */,
 				3EBCC7F729B3DA4E00AEA9F3 /* CalendarPermissions.swift */,
 				3E7C357329BB0E0700C311EF /* MacSettingsView.swift */,
+				3E9B850F29C14EE5008E5202 /* Intents.intentdefinition */,
 			);
 			path = TimeSlicer;
 			sourceTree = "<group>";
@@ -116,6 +160,9 @@
 				3EBCC7DC29B3D85800AEA9F3 /* Sources */,
 				3EBCC7DD29B3D85800AEA9F3 /* Frameworks */,
 				3EBCC7DE29B3D85800AEA9F3 /* Resources */,
+				3E9B853929C15A0F008E5202 /* Embed Foundation Extensions */,
+				3E9B854B29C15AC9008E5202 /* Embed ExtensionKit Extensions */,
+				3E9B859629C160C8008E5202 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
@@ -170,7 +217,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E9B850D29C05860008E5202 /* myentitlements.plist in Resources */,
 				3EBCC7F129B3D85C00AEA9F3 /* Preview Assets.xcassets in Resources */,
 				3EBCC7ED29B3D85C00AEA9F3 /* Assets.xcassets in Resources */,
 				3E9B850B29C0415D008E5202 /* ExportOptions.plist in Resources */,
@@ -189,7 +235,9 @@
 				3E55B12229BBCCE100282EB3 /* EKCalendarPickerView.swift in Sources */,
 				3EA081AD29B455F600D8C372 /* Timeboxing.swift in Sources */,
 				3EBCC7E429B3D85800AEA9F3 /* TimeSlicerApp.swift in Sources */,
+				3E9B857E29C15E49008E5202 /* CalendarFunctions.swift in Sources */,
 				3EBCC7EB29B3D85800AEA9F3 /* ContentView.swift in Sources */,
+				3E9B851029C14EE6008E5202 /* Intents.intentdefinition in Sources */,
 				3E165C7429B96817001065CB /* HelpView.swift in Sources */,
 				3EBCC7FD29B3F13000AEA9F3 /* SettingsView.swift in Sources */,
 				3EBCC7F829B3DA4E00AEA9F3 /* CalendarPermissions.swift in Sources */,
@@ -236,6 +284,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -299,6 +348,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -323,6 +373,7 @@
 		3EBCC7F529B3D85C00AEA9F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeSlicer/TimeSlicer.entitlements;
@@ -330,6 +381,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeSlicer/Preview Content\"";
 				DEVELOPMENT_TEAM = 6BS49F3GLW;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -368,6 +420,7 @@
 		3EBCC7F629B3D85C00AEA9F3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TimeSlicer/TimeSlicer.entitlements;
@@ -375,6 +428,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"TimeSlicer/Preview Content\"";
 				DEVELOPMENT_TEAM = 6BS49F3GLW;
 				ENABLE_HARDENED_RUNTIME = YES;
