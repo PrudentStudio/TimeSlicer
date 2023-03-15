@@ -19,10 +19,10 @@ extension EKSource: Comparable {
 extension EKCalendar {
     var shouldSync: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: self.calendarIdentifier)
+            return UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: self.calendarIdentifier)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: self.calendarIdentifier)
+            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(newValue, forKey: self.calendarIdentifier)
             print("just set \(newValue) for calendar \(self.calendarIdentifier)")
         }
     }
@@ -39,8 +39,8 @@ class CalendarViewModel: ObservableObject {
         for (source, calendars) in self.calendarDict {
             if let index = calendars.firstIndex(of: calendar) {
                 self.calendarDict[source]?[index].shouldSync = shouldSync
-                UserDefaults.standard.set(shouldSync, forKey: calendar.calendarIdentifier)
-                UserDefaults.standard.synchronize() // Force the changes to be saved immediately
+                UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(shouldSync, forKey: calendar.calendarIdentifier)
+                UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.synchronize() // Force the changes to be saved immediately
                 break
             }
         }

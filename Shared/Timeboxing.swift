@@ -69,8 +69,8 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
     // Helper function to check if a timebox is within working hours
     func isWithinWorkingHours(start: Date, end: Date) -> Bool {
         let calendar = Calendar.current
-        let userDefinedStartComponents = calendar.dateComponents([.hour, .minute], from: UserDefaults.standard.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!)
-        let userDefinedEndComponents = calendar.dateComponents([.hour, .minute], from: UserDefaults.standard.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!)
+        let userDefinedStartComponents = calendar.dateComponents([.hour, .minute], from: UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayStart") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 8))!)
+        let userDefinedEndComponents = calendar.dateComponents([.hour, .minute], from: UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.object(forKey: "DayEnd") as? Date ?? Calendar.current.date(from: DateComponents.init(hour: 20))!)
         let workingHoursStart = calendar.date(
             bySettingHour: userDefinedStartComponents.hour!,
             minute: userDefinedStartComponents.minute!,
@@ -117,6 +117,7 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
 }
 
 func cleanCalendar(){
+    let eventStore = EKEventStore()
     let calendars = eventStore.calendars(for: .event)
     let calendarToDelete = calendars.first(where: { $0.title == "TimeSlicer" })
 
@@ -149,6 +150,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
 //    var sortedTasks = tasks.sorted {
 //        $0.priority > $1.priority
 //    }
+    let eventStore = EKEventStore()
     cleanCalendar()
     var errored = false
     let priority1 = tasks.filter {$0.priority == 1}.sorted {$0.duedate! < $1.duedate!}
@@ -159,7 +161,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
     
     var scheduledTimeboxes = timeboxes
     
-    let calIdentifier: String = UserDefaults.standard.string(forKey: "primarySource") ?? ""
+    let calIdentifier: String = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.string(forKey: "primarySource") ?? ""
     print("primaryy source is \(calIdentifier)")
     let myCalendar = eventStore.calendars(for: .event).first(where: { $0.title == "TimeSlicer" }) ?? {
         let newCalendar = EKCalendar(for: .event, eventStore: eventStore)
@@ -169,7 +171,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
         } else {
             newCalendar.source = eventStore.source(withIdentifier: calIdentifier)
         }
-        print(newCalendar.source)
+        print(newCalendar.source ?? "no calendar")
         //print(newCalendar.source.allowsCalendarAdditions)
         do {
             try eventStore.saveCalendar(newCalendar, commit: true)
@@ -244,7 +246,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
 }
 
 func createAndInitTimeboxes() -> [Timebox] {
-    let aggressive: Bool = UserDefaults.standard.bool(forKey: "Aggressive")
+    let aggressive: Bool = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
     
     var timeInterval = 60
     if aggressive {
@@ -270,7 +272,7 @@ func createAndInitTimeboxes() -> [Timebox] {
 
 /*
 func getWritableCalendar() -> EKCalendar {
-    let myCalendarIdentifiers = UserDefaults.standard.stringArray(forKey: "selectedCals")
+    let myCalendarIdentifiers = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.stringArray(forKey: "selectedCals")
     let myCalendars = getCalendarsByIdentifiers(myCalendarIdentifiers ?? [])!
     for cal in myCalendars {
         if cal.isImmutable {
