@@ -18,3 +18,5 @@ jobs:
         run:  xcodebuild test -project TimeSlicer.xcodeproj -scheme TimeSlicer -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' build test
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
