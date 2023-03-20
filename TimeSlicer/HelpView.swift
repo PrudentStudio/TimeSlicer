@@ -62,7 +62,7 @@ struct HelpView: View {
                         Button(action: {
                             requestCalendarPermission()
                         }) {
-                            Text("TimeSlicer requires permission for the Calendar to be able to work properly. Grant Calendar Permission")
+                            Text("TimeSlicer requires permission for the Calendar to be able to work properly. Continue.")
                         }
                     }
                 }

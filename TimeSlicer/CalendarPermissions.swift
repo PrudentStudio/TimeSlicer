@@ -16,6 +16,8 @@ struct CalendarPermissions: View {
     @State private var allSources: [EKSource] = []
     @State public var hasCalendarAuthorization: Bool = false
 
+    @State var showPermissionsModal = true
+
     @Binding var isPresentingSheet: Bool
 
     var body: some View {
@@ -24,14 +26,15 @@ struct CalendarPermissions: View {
                 Spacer()
                 Form {
                     Section(header: Text("Step 0 - Permissions")) {
+                        Text("TimeSlicer requires permission for the Calendar to be able to work properly")
                         if hasCalendarAuthorization {
-                            Text("You have already granted these permissions")
+                            Text("You have already granted the necessary permissions")
                         } else {
                             Button(action: {
                                 requestCalendarPermission()
                                 fetchSources()
                             }) {
-                                Text("Grant Calendar Permission")
+                                Text("Continue")
                             }
                         }
                     }
@@ -76,6 +79,7 @@ struct CalendarPermissions: View {
                 }
 
             }.onAppear(perform: {
+                requestCalendarPermission()
                 fetchSources()
             })
         }

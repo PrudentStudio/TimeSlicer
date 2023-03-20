@@ -121,6 +121,13 @@
 			path = TimeSlicerTests;
 			sourceTree = "<group>";
 		};
+		3E81EC5A29C9190A0059A99F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3E9B857429C15BFB008E5202 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
@@ -140,6 +147,7 @@
 				3EBCC7E229B3D85800AEA9F3 /* TimeSlicer */,
 				3E81EC4F29C8F67C0059A99F /* TimeSlicerTests */,
 				3EBCC7E129B3D85800AEA9F3 /* Products */,
+				3E81EC5A29C9190A0059A99F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -527,7 +535,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.navanchauhan.TimeSlicer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -574,7 +582,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.navanchauhan.TimeSlicer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
