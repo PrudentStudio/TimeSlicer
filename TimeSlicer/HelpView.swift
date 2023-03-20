@@ -5,32 +5,33 @@
 //  Created by Navan Chauhan on 08/03/23.
 //
 
-import SwiftUI
 import EventKit
+import SwiftUI
 
 #if os(macOS)
-class HelpWindowController: NSWindowController {
-    convenience init() {
-        let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
-            backing: .buffered, defer: false)
-        window.center()
-        window.title = "Help"
-        window.contentView = NSHostingView(rootView: HelpView())
-        self.init(window: window)
-    }
+    class HelpWindowController: NSWindowController {
+        convenience init() {
+            let window = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+                styleMask: [.titled, .closable, .miniaturizable, .resizable],
+                backing: .buffered, defer: false
+            )
+            window.center()
+            window.title = "Help"
+            window.contentView = NSHostingView(rootView: HelpView())
+            self.init(window: window)
+        }
 
-    override func windowDidLoad() {
-        super.windowDidLoad()
-        window?.center()
-    }
+        override func windowDidLoad() {
+            super.windowDidLoad()
+            window?.center()
+        }
 
-    override func close() {
-        super.close()
-        window = nil // Release the window and its associated views
+        override func close() {
+            super.close()
+            window = nil // Release the window and its associated views
+        }
     }
-}
 #endif
 
 struct HelpView: View {
@@ -42,9 +43,9 @@ struct HelpView: View {
                     Text("Setting up Calendars and Permissions")
                         .font(.title)
                     #if os(iOS)
-                    Text("Click on the Settings icon and customise the following options:")
+                        Text("Click on the Settings icon and customise the following options:")
                     #elseif os(macOS)
-                    Text("Open the app preferences by using CMD+, and customise the following options:")
+                        Text("Open the app preferences by using CMD+, and customise the following options:")
                     #endif
                     Text("1. Pick Calendars to Sync With - The calendars you choose to sync from are used to block timeslots when the app will not organise any events.")
                     Text("2. Primary Calendar Account to Write to - The primary account source you choose will have a new Calendar be created called \"TimeSlicer\", this is where the app writes the events to.")
@@ -55,7 +56,7 @@ struct HelpView: View {
                     Text("Unable to create a calendar")
                         .font(.title)
                     Text("If the app is telling you that it is unable to create the calendar, you are most likely using a Google Calendar account. You will manually have to create a calendar titled \"TimeSlicer\".\n")
-                    if (checkCalendarAuthorizationStatus()) {
+                    if checkCalendarAuthorizationStatus() {
                         Text("TimeSlicer requires permission for the Calendar to be able to work properly, but you have already granted these permissions")
                     } else {
                         Button(action: {
@@ -64,7 +65,6 @@ struct HelpView: View {
                             Text("TimeSlicer requires permission for the Calendar to be able to work properly. Grant Calendar Permission")
                         }
                     }
-                    
                 }
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
@@ -73,21 +73,20 @@ struct HelpView: View {
             .navigationTitle("Help!")
         }
     }
-    
+
     func requestCalendarPermission() {
         let eventStore = EKEventStore()
-        
+
         switch EKEventStore.authorizationStatus(for: .event) {
         case .authorized:
             isCalendarPermissionGranted = true
         case .denied:
             isCalendarPermissionGranted = false
         case .notDetermined:
-            eventStore.requestAccess(to: .event) { (granted, error) in
+            eventStore.requestAccess(to: .event) { granted, _ in
                 DispatchQueue.main.async {
                     isCalendarPermissionGranted = granted
                 }
-                
             }
         case .restricted:
             isCalendarPermissionGranted = false
@@ -95,7 +94,7 @@ struct HelpView: View {
             isCalendarPermissionGranted = false
         }
     }
-    
+
     func checkCalendarAuthorizationStatus() -> Bool {
         let status = EKEventStore.authorizationStatus(for: .event)
         switch status {

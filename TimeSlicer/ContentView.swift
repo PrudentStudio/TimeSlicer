@@ -5,32 +5,33 @@
 //  Created by Navan Chauhan on 04/03/23.
 //
 
-import SwiftUI
 import CoreData
+import SwiftUI
 
 import AlertToast
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    
-    @State private var isPresentingSheet = !(UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded"))
+
+    @State private var isPresentingSheet = !(UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded"))
     @State private var isPresentingAddTask = false
-    
+
     @State private var searchText = ""
     @State private var showCancelButton = false
-    
+
     @State private var showToast = false
     @State private var showErrorToast = false
-    
+
     @FetchRequest(
-            sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
-            predicate: NSPredicate(format: "done == nil OR done == false"),
-            animation: .default)
-        private var items: FetchedResults<Tasks>
-    
+        sortDescriptors: [NSSortDescriptor(keyPath: \Tasks.timestamp, ascending: true)],
+        predicate: NSPredicate(format: "done == nil OR done == false"),
+        animation: .default
+    )
+    private var items: FetchedResults<Tasks>
+
     var searchResults: [Tasks] {
         if searchText.isEmpty {
-            return Array(items);
+            return Array(items)
         } else {
             return items.filter { $0.title?.lowercased().contains(searchText.lowercased()) == true || $0.description.lowercased().contains(searchText.lowercased()) == true }
         }
@@ -44,25 +45,21 @@ struct ContentView: View {
                         NavigationLink {
                             ItemDetail(item: item)
                         } label: {
-                            
-#if os(macOS)
-                            VStack {
-                                
-                                HStack{Text(item.title!)
+                            #if os(macOS)
+                                VStack {
+                                    HStack { Text(item.title!)
                                         .padding()
-                                    
+                                    }
+                                    Divider()
                                 }
-                                Divider()
-                                
-                            }
-#elseif os(iOS)
-                            Text(item.title!)
-                                .padding()
-#endif
+                            #elseif os(iOS)
+                                Text(item.title!)
+                                    .padding()
+                            #endif
                         }.swipeActions(edge: .leading) {
                             Button(action: {
                                 item.done = true
-                                
+
                             }) {
                                 Label("Done", systemImage: "briefcase")
                             }.tint(.teal)
@@ -71,17 +68,17 @@ struct ContentView: View {
                     .onDelete(perform: deleteItems)
                 }.refreshable(action: {
                     do {
-                            try viewContext.save() // Save any pending changes to the data store
-                            viewContext.refreshAllObjects() // Reload data from the data store
-                        } catch let error as NSError {
-                            print("Could not update data. \(error), \(error.userInfo)")
-                        }
+                        try viewContext.save() // Save any pending changes to the data store
+                        viewContext.refreshAllObjects() // Reload data from the data store
+                    } catch let error as NSError {
+                        print("Could not update data. \(error), \(error.userInfo)")
+                    }
                 })
-                
+
                 .searchable(text: $searchText)
-                .onContinueUserActivity("ScheduleTasksIntent", perform: {_ in
-                    let aggressive: Bool = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
-                    
+                .onContinueUserActivity("ScheduleTasksIntent", perform: { _ in
+                    let aggressive: Bool = UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
+
                     var timeInterval = 60
                     if aggressive {
                         timeInterval = 10
@@ -94,61 +91,59 @@ struct ContentView: View {
                         showToast = true
                     }
                 })
-                    .toolbar {
-                        ToolbarItem {
-#if os(iOS)
+                .toolbar {
+                    ToolbarItem {
+                        #if os(iOS)
                             NavigationLink(destination: HelpView()) {
                                 Label("Help", systemImage: "questionmark.circle")
                             }
-#elseif os(macOS)
+                        #elseif os(macOS)
                             Button(action: {
                                 let windowController = HelpWindowController()
                                 windowController.showWindow(nil)
                             }) {
                                 Label("Help", systemImage: "questionmark.circle")
                             }
-#endif
-                        }
-#if os(iOS)
+                        #endif
+                    }
+                    #if os(iOS)
                         ToolbarItem {
                             NavigationLink(destination: SettingsView()) {
                                 Label("Settings", systemImage: "gear")
                             }
                         }
-#endif
-                        ToolbarItem {
-                            Button(action: {isPresentingAddTask=true}){
-                                Label("Add Item", systemImage: "plus")
-                            }
-
+                    #endif
+                    ToolbarItem {
+                        Button(action: { isPresentingAddTask = true }) {
+                            Label("Add Item", systemImage: "plus")
                         }
                     }
-#if os(iOS)
-                    .navigationBarTitle("TimeSlicer", displayMode: .large)
-#elseif os(OSX)
-                    .navigationTitle("TimeSlicer")
-#endif
-                
+                }
+                #if os(iOS)
+                .navigationBarTitle("TimeSlicer", displayMode: .large)
+                #elseif os(OSX)
+                .navigationTitle("TimeSlicer")
+                #endif
+
             }.sheet(isPresented: $isPresentingSheet, onDismiss: {
-                UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(true, forKey: "onboarded")
-                print("just set", UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded"))
+                UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.set(true, forKey: "onboarded")
+                print("just set", UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "onboarded"))
             }) {
                 CalendarPermissions(isPresentingSheet: $isPresentingSheet)
             }.sheet(isPresented: $isPresentingAddTask) {
                 TaskCreatorSheet(isPresentingAddTask: $isPresentingAddTask)
                     .environment(\.managedObjectContext, viewContext)
                     .padding(.vertical, 20)
-            }.toast(isPresenting: $showToast, duration: 4){
-                
+            }.toast(isPresenting: $showToast, duration: 4) {
                 // `.alert` is the default displayMode
                 AlertToast(type: .complete(.teal), title: "Calendar Organized!")
-                
+
             }.toast(isPresenting: $showErrorToast, duration: 4) {
                 AlertToast(displayMode: .hud, type: .error(.red), title: "Error Creating Calendar", subTitle: "Please click on the help icon for more details")
             }
             FloatingButton(action: {
-                let aggressive: Bool = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
-                
+                let aggressive: Bool = UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
+
                 var timeInterval = 60
                 if aggressive {
                     timeInterval = 10
@@ -160,11 +155,10 @@ struct ContentView: View {
                 } else {
                     showToast = true
                 }
-                            }, icon: "hourglass.badge.plus")
+            }, icon: "hourglass.badge.plus")
         }
-        
     }
-    
+
     private func commit() {
         withAnimation {
             do {
@@ -223,12 +217,12 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
-struct ItemDetail : View {
+struct ItemDetail: View {
     @Environment(\.managedObjectContext) private var viewContext
     let item: Tasks
-    
+
     let date = Date()
-        let formatter = ISO8601DateFormatter()
+    let formatter = ISO8601DateFormatter()
 
     var body: some View {
         Form {
@@ -253,15 +247,11 @@ struct ItemDetail : View {
                 }) {
                     Text("Mark as Done")
                 }
-                
             }
-            
-            
         }
         .navigationTitle(item.title!)
     }
 }
-
 
 struct FloatingButton: View {
     let action: () -> Void
@@ -273,21 +263,20 @@ struct FloatingButton: View {
                 Spacer()
                 Button(action: action) {
                     #if os(iOS)
-                    Image(systemName: icon)
-                        .accessibilityLabel(Text("Schedule Calendar"))
-                        .font(.system(size: 25))
-                        .foregroundColor(.white)
-                        .frame(width: 60, height: 60)
-                        .background(.teal)
-                        .cornerRadius(30)
+                        Image(systemName: icon)
+                            .accessibilityLabel(Text("Schedule Calendar"))
+                            .font(.system(size: 25))
+                            .foregroundColor(.white)
+                            .frame(width: 60, height: 60)
+                            .background(.teal)
+                            .cornerRadius(30)
                     #elseif os(macOS)
-                    Text("Schedule Calendar")
+                        Text("Schedule Calendar")
                     #endif
                 }
-                
+
                 .shadow(radius: 10)
                 .offset(x: -25, y: -30)
-                
             }
         }
     }

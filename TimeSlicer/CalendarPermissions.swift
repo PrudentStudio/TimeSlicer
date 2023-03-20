@@ -5,8 +5,8 @@
 //  Created by Navan Chauhan on 04/03/23.
 //
 
-import SwiftUI
 import EventKit
+import SwiftUI
 
 let eventStore = EKEventStore()
 
@@ -15,16 +15,16 @@ struct CalendarPermissions: View {
     @State public var selectedSource: EKSource?
     @State private var allSources: [EKSource] = []
     @State public var hasCalendarAuthorization: Bool = false
-    
+
     @Binding var isPresentingSheet: Bool
-    
+
     var body: some View {
         NavigationStack {
             VStack {
                 Spacer()
                 Form {
                     Section(header: Text("Step 0 - Permissions")) {
-                        if (hasCalendarAuthorization) {
+                        if hasCalendarAuthorization {
                             Text("You have already granted these permissions")
                         } else {
                             Button(action: {
@@ -37,16 +37,16 @@ struct CalendarPermissions: View {
                     }
                     Section(header: Text("Step 1 - Primary Calendar Source")) {
                         Text("Which Calendar source do you want us to write the tasks to? If you choose a Google Calendar, you will have to first manually go and create a calendar titled \"TimeSlicer\". If you cannot see any sources here, after reading through these instructions, go to the preferences section.")
-                            //.fixedSize(horizontal: false, vertical: true)
-                            
+                        // .fixedSize(horizontal: false, vertical: true)
+
                         Picker("Primary Calendar", selection: $selectedSource) {
                             ForEach(allSources, id: \.title) { source in
                                 Text(source.title)
                                     .tag(source as EKSource?)
                             }
-                            
+
                         }.onChange(of: selectedSource) { _ in
-                            UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
+                            UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.set(selectedSource!.sourceIdentifier, forKey: "primarySource")
                         }
                     }
                     Section(header: Text("Step 2 - Configure ze App")) {
@@ -55,46 +55,42 @@ struct CalendarPermissions: View {
                     Section(header: Text("Step 3 - Add Tasks")) {
                         Text("Add tasks and tap the schedule calendar button")
                     }
-                    
+
                     .lineLimit(nil)
                     #if os(macOS)
-                    .frame(minWidth: 200, minHeight: 50)
+                        .frame(minWidth: 200, minHeight: 50)
                     #endif
-                    
                 }
                 .navigationTitle("Onboarding")
                 .toolbar {
                     ToolbarItem(placement: .automatic) {
-                            Button("Done") {
-                                isPresentingSheet = false
-                                UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.set(true, forKey: "onboarded")
-                            }
-                            .keyboardShortcut(.cancelAction)
-                            .padding(.trailing, 20)
-                            .help("Dismiss Onboarding Screen")
-                            .accessibility(label: Text("Done"))
+                        Button("Done") {
+                            isPresentingSheet = false
+                            UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.set(true, forKey: "onboarded")
                         }
+                        .keyboardShortcut(.cancelAction)
+                        .padding(.trailing, 20)
+                        .help("Dismiss Onboarding Screen")
+                        .accessibility(label: Text("Done"))
+                    }
                 }
-                
+
             }.onAppear(perform: {
                 fetchSources()
             })
-            
         }
-        
     }
-    
-    
-    func fetchSources(){
+
+    func fetchSources() {
         let eventStore = EKEventStore()
-        let sources =  eventStore.sources.filter({ $0.sourceType == .calDAV || $0.sourceType == .local })
-        
-        let calIdentifier: String = UserDefaults.init(suiteName: "group.com.navanchauhan.timeslicer")!.string(forKey: "primarySource") ?? ""
+        let sources = eventStore.sources.filter { $0.sourceType == .calDAV || $0.sourceType == .local }
+
+        let calIdentifier: String = UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.string(forKey: "primarySource") ?? ""
         print(sources)
-        if (calIdentifier == "" ) {
+        if calIdentifier == "" {
             DispatchQueue.main.async {
-                self.allSources = sources
-                self.selectedSource = sources.first
+                allSources = sources
+                selectedSource = sources.first
             }
         } else {
             print("identifier saved is")
@@ -102,45 +98,42 @@ struct CalendarPermissions: View {
             for source in sources {
                 print("found")
                 print(source.sourceIdentifier)
-                if (source.sourceIdentifier.trimmingCharacters(in: .whitespaces) == calIdentifier.trimmingCharacters(in: .whitespaces)) {
+                if source.sourceIdentifier.trimmingCharacters(in: .whitespaces) == calIdentifier.trimmingCharacters(in: .whitespaces) {
                     DispatchQueue.main.async {
-                        self.allSources = sources
-                        self.selectedSource = source
+                        allSources = sources
+                        selectedSource = source
                     }
                 }
             }
-            
         }
-        
     }
-    
+
     func requestCalendarPermission() {
         let eventStore = EKEventStore()
-        
+
         switch EKEventStore.authorizationStatus(for: .event) {
         case .authorized:
             isCalendarPermissionGranted = true
-            self.hasCalendarAuthorization = true
+            hasCalendarAuthorization = true
         case .denied:
             isCalendarPermissionGranted = false
-            self.hasCalendarAuthorization = false
+            hasCalendarAuthorization = false
         case .notDetermined:
-            eventStore.requestAccess(to: .event) { (granted, error) in
+            eventStore.requestAccess(to: .event) { granted, _ in
                 DispatchQueue.main.async {
                     isCalendarPermissionGranted = granted
-                    self.hasCalendarAuthorization = granted
+                    hasCalendarAuthorization = granted
                 }
-                
             }
         case .restricted:
             isCalendarPermissionGranted = false
-            self.hasCalendarAuthorization = false
+            hasCalendarAuthorization = false
         @unknown default:
             isCalendarPermissionGranted = false
-            self.hasCalendarAuthorization = false
+            hasCalendarAuthorization = false
         }
     }
-    
+
     func checkCalendarAuthorizationStatus() -> Bool {
         let status = EKEventStore.authorizationStatus(for: .event)
         switch status {
@@ -157,6 +150,4 @@ struct CalendarPermissions: View {
             return false
         }
     }
-    
-    
 }

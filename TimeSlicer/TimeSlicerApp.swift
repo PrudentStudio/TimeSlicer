@@ -25,15 +25,15 @@ struct TimeSlicerApp: App {
             CommandGroup(replacing: .newItem, addition: {
                 Button(action: {
                     isPresentingAddTask = true
-                }){
+                }) {
                     Label("Add Task", systemImage: "plus")
                 }.keyboardShortcut("n")
             })
         }
         #if os(macOS)
-        Settings {
-            MacSettingsView()
-        }
+            Settings {
+                MacSettingsView()
+            }
         #endif
     }
 }

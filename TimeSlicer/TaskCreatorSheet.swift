@@ -10,18 +10,18 @@ import SwiftUI
 struct TaskCreatorSheet: View {
     @Environment(\.managedObjectContext) private var viewContext
     @State private var title: String = ""
-    @State private var dueDate: Date = Date()
+    @State private var dueDate: Date = .init()
     @State private var duration: Int = 10
     @State private var description: String = ""
     @State private var priority = 1.0
-    
+
     @Binding var isPresentingAddTask: Bool
-        
+
     var body: some View {
         NavigationStack {
             HStack {
                 #if os(macOS)
-                Spacer()
+                    Spacer()
                 #endif
                 Form {
                     Section(header: Text("Task Details")) {
@@ -30,16 +30,17 @@ struct TaskCreatorSheet: View {
                         Text("Priority (1-4)")
                         Slider(
                             value: $priority,
-                            in: 1...4,
-                            step: 1) {
-                                Text("Priority (1-4)")
-                            } minimumValueLabel: {
-                                Text("1")
-                            } maximumValueLabel: {
-                                Text("4")
-                            }
-                        
-                        Stepper(value: $duration, in: 10...120, step: 10, label: {
+                            in: 1 ... 4,
+                            step: 1
+                        ) {
+                            Text("Priority (1-4)")
+                        } minimumValueLabel: {
+                            Text("1")
+                        } maximumValueLabel: {
+                            Text("4")
+                        }
+
+                        Stepper(value: $duration, in: 10 ... 120, step: 10, label: {
                             Text("Task Duration: \(duration) minute\(duration == 10 ? "" : "s")")
                         })
                         Text("Task Description:")
@@ -52,7 +53,7 @@ struct TaskCreatorSheet: View {
                 .toolbar {
                     ToolbarItem(placement: .automatic) {
                         Button(action: {
-                            if !(title=="") || !(description=="") {
+                            if !(title == "") || !(description == "") {
                                 let newItem = Tasks(context: viewContext)
                                 newItem.timestamp = Date()
                                 newItem.title = title
@@ -60,7 +61,7 @@ struct TaskCreatorSheet: View {
                                 newItem.duedate = dueDate
                                 newItem.duration = Int16(duration)
                                 newItem.priority = Int16(priority)
-                                
+
                                 do {
                                     try viewContext.save()
                                 } catch {
@@ -86,14 +87,9 @@ struct TaskCreatorSheet: View {
                     }
                 }
                 #if os(macOS)
-                Spacer()
+                    Spacer()
                 #endif
-                
             }
-            
         }
-        
-        }
+    }
 }
-
-
