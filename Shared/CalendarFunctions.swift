@@ -8,8 +8,7 @@
 import EventKit
 import Foundation
 
-func getCalendarsByIdentifiers(_ identifiers: [String]) -> Set<EKCalendar>? {
-    let eventStore = EKEventStore()
+func getCalendarsByIdentifiers(_ identifiers: [String], eventStore: EKEventStore = EKEventStore()) -> Set<EKCalendar>? {
     let calendars = eventStore.calendars(for: .event)
     var result: [EKCalendar] = []
 

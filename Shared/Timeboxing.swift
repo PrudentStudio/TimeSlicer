@@ -27,10 +27,9 @@ func numBoxes(from_start: Date, to_end: Date, time_interval: Int = 10) -> Int {
     return minutes / time_interval
 }
 
-func getEvents(from_start: Date, to_end: Date) -> [EKEvent] {
+func getEvents(from_start: Date, to_end: Date, eventStore: EKEventStore = EKEventStore()) -> [EKEvent] {
     var myCalendarIdentifiers: [String] = []
 
-    let eventStore = EKEventStore()
     let sources = eventStore.sources
 
     var calendarDict: [EKSource: [EKCalendar]] = [:]
@@ -59,9 +58,9 @@ struct Timebox {
     var isAvailable: Bool
 }
 
-func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) -> [Timebox] {
+func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10, eventStore: EKEventStore = EKEventStore()) -> [Timebox] {
     var timeboxes = [Timebox]()
-    let events = getEvents(from_start: startDate, to_end: endDate)
+    let events = getEvents(from_start: startDate, to_end: endDate, eventStore: eventStore)
 
     // Helper function to check if a timebox is within working hours
     func isWithinWorkingHours(start: Date, end: Date) -> Bool {
@@ -113,8 +112,7 @@ func createTimeboxes(startDate: Date, endDate: Date, time_interval: Int = 10) ->
     return timeboxes
 }
 
-func cleanCalendar() {
-    let eventStore = EKEventStore()
+func cleanCalendar(eventStore: EKEventStore = EKEventStore()) {
     let calendars = eventStore.calendars(for: .event)
     let calendarToDelete = calendars.first(where: { $0.title == "TimeSlicer" })
 
@@ -141,11 +139,7 @@ func cleanCalendar() {
     }
 }
 
-func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10) -> [Timebox] {
-//    var sortedTasks = tasks.sorted {
-//        $0.priority > $1.priority
-//    }
-    let eventStore = EKEventStore()
+func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10, eventStore: EKEventStore = EKEventStore()) -> [Timebox] {
     cleanCalendar()
     var errored = false
     let priority1 = tasks.filter { $0.priority == 1 }.sorted { $0.duedate! < $1.duedate! }
@@ -237,7 +231,7 @@ func scheduleTasks(tasks: [Tasks], timeboxes: [Timebox], time_interval: Int = 10
     return scheduledTimeboxes
 }
 
-func createAndInitTimeboxes() -> [Timebox] {
+func createAndInitTimeboxes(eventStore: EKEventStore = EKEventStore()) -> [Timebox] {
     let aggressive: Bool = UserDefaults(suiteName: "group.com.navanchauhan.timeslicer")!.bool(forKey: "Aggressive")
 
     var timeInterval = 60
@@ -248,7 +242,7 @@ func createAndInitTimeboxes() -> [Timebox] {
     let start_date = Calendar.current.date(from: Calendar.current.dateComponents([.year, .month, .day], from: Date()))!
     let end_date = start_date.addingTimeInterval(7 * 24 * 60 * 60) // 7 days = 7*24*60*60
 
-    let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval)
+    let myTimeboxes = createTimeboxes(startDate: start_date, endDate: end_date, time_interval: timeInterval, eventStore: eventStore)
     var cnt = 0
     var avail = 0
     for box in myTimeboxes {
