@@ -14,7 +14,7 @@ func getCalendarsByIdentifiers(_ identifiers: [String]) -> Set<EKCalendar>? {
     var result: [EKCalendar] = []
 
     for calendar in calendars {
-    if identifiers.contains(calendar.calendarIdentifier) {
+        if identifiers.contains(calendar.calendarIdentifier) {
             result.append(calendar)
         }
     }
