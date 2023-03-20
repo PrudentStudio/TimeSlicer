@@ -1,0 +1,20 @@
+name: Code Coverage
+
+on:
+  push:
+    branches:
+master
+  pull_request:
+    branches:
+master
+
+jobs:
+  build:
+    runs-on: macOS-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+      - name: Build and Test
+        run:  xcodebuild test -project TimeSlicer.xcodeproj -scheme TimeSlicer -destination 'platform=iOS Simulator,name=iPhone 11,OS=16.2' build test
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
